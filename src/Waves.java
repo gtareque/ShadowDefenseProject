@@ -30,6 +30,7 @@ public class Waves {
      * create and stroes new slicer in the current wave
      * @param polyLines The polyline generated from the map */
     public void createNewSlicer(List<Point> polyLines) {
+
         slicers[slicerCount++] = new Slicer(polyLines);
     }
 

@@ -13,14 +13,14 @@ import bagel.DrawOptions;
 
 public class Slicer {
 
-    private int polylineIndex;      // the targeted polyline point point index
-    private double stepsCounter;    // steps taken towards the target
+    private int polylineIndex = 1;      // the targeted polyline point point index
+    private double stepsCounter = 0;    // steps taken towards the target
     private double displacementLength;    // magnitude of the displacement between two vector points
     private Vector2 initVector;     // initial vector position
     private Vector2 finalVector;    // final vector position
     private Vector2 velocity;       // derived velocity
     private int targetFrames;       // the number of times the velocity must be added to initVector
-    private boolean status;     // flag for checking if it has completed journey
+    private boolean status = false;     // flag for checking if it has completed journey
     private static int scaler = 1;   // timescale multiplier
 
 
@@ -29,9 +29,6 @@ public class Slicer {
      * Gives the initial slicer properties such as velocity and target frames
      * @param polyLines The polyline generated from the map */
     public Slicer(List<Point> polyLines) {
-        polylineIndex = 1;
-        stepsCounter = 0;
-        status = false;
 
         /* calculate displacement and velocity */
         initVector = new Vector2(polyLines.get(0).x, polyLines.get(0).y);
@@ -112,87 +109,10 @@ public class Slicer {
      * @param givenVelocity The velocity whose direction is to be calculated */
 
     public static double getTheta(Vector2 velocity) {
-
-
-
-        /* horizontal/ vertical movements */
-        if(velocity.y == 0.0 || velocity.x == 0.0) {
-            return oneDimensionalMovement(velocity);
-        }
-
-        /* taking turns */
-        double alpha = findAlpha(velocity.x, velocity.y);
-        return twoDimensionalMovement(velocity, alpha);
-
-
+        return Math.atan2(velocity.y, velocity.x);
+        
    }
 
-
-    /**
-     *
-     * Calculates the base angle alpha with taking the signs of the points
-     * @param x x coordinate of the velocity
-     * @param y y coordinate of the velocity*/
-
-
-   public static double findAlpha(double x, double y) {
-        if((y/x) < 0) {
-            return Math.atan(-1 *y/x);
-
-        }
-
-        return Math.atan(y/x);
-
-   }
-    /**
-     *
-     * Returns the angle the slicer must rotate if movement is horizontal/vertical
-     * @param velocity The velocity of the slicer */
-
-   public static double oneDimensionalMovement( Vector2 velocity) {
-
-       if(velocity.x > 0 ) {
-
-           return (0);
-       }
-       if(velocity.x < 0) {
-
-           return (Math.PI);
-       }
-       if(velocity.y > 0) {
-
-           return (Math.PI/2);
-       }
-       if(velocity.y < 0) {
-
-           return (-1 * Math.PI/2);
-       }
-       return(0.0);
-   }
-
-
-    /**
-     *
-     * Returns the angle of rotation for the slicer if taking turns
-     * @param velocity The velocity whose direction is to be calculated
-     * @param alpha The base angle calculated using findAlpha method */
-    public static double twoDimensionalMovement(Vector2 velocity, double alpha) {
-        if(velocity.x > 0 && velocity.y > 0) {
-            /* first quadrant */
-            return alpha;
-        }
-        else if (velocity.x < 0 && velocity.y > 0) {
-            /* second quadrant */
-            return (Math.PI - alpha);
-        }
-        else if(velocity.x < 0 && velocity.y <0) {
-            /* third quadrant */
-            return (Math.PI + alpha );
-        }else {
-            /* fourth quadrant */
-            return ((2 * Math.PI) - alpha);
-        }
-    }
 
     /**
      *
