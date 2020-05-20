@@ -58,7 +58,6 @@ public class Slicer {
             if (stepsCounter == targetFrames) {
                 polylineIndex += 1;
                 stepsCounter = 0;
-
                 /* calculate displacement and velocity and target frames */
                 initVector = finalVector;
                 finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
@@ -110,7 +109,7 @@ public class Slicer {
 
     public static double getTheta(Vector2 velocity) {
         return Math.atan2(velocity.y, velocity.x);
-        
+
    }
 
 
