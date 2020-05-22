@@ -12,6 +12,7 @@ import bagel.map.TiledMap;
 import bagel.util.Point;
 import java.util.List;
 import bagel.Input;
+import bagel.util.Rectangle;
 
 public class ShadowDefend extends AbstractGame {
     private TiledMap map;
@@ -23,7 +24,10 @@ public class ShadowDefend extends AbstractGame {
     private static final int MAX_SLICERS = 5;
     private static final int FRAMES_IN_FIVE_SEC = 300;
     private int scaler = 1;     // default scaler value is one
-
+    private BuyPanel buyPanel;
+    private boolean buyMode = false;
+    private Tower currentlyBuying;
+    private List<Rectangle> mapBounds;
     /* Main */
     public static void main(String args[]) {
 
@@ -38,8 +42,10 @@ public class ShadowDefend extends AbstractGame {
 
         map = new TiledMap("res/levels/1.tmx");
         polyLines = map.getAllPolylines().get(0);
+
         gameRunning = false;
         currWave = new Waves();
+        buyPanel = new BuyPanel();
 
     }
 
@@ -50,9 +56,30 @@ public class ShadowDefend extends AbstractGame {
      * * @param input The input instance which provides access to keyboard/mouse state information.     */
     @Override
     protected void update(Input input) {
-
+        /**********************************/
         frameCount++;
         map.draw(0,0,0,0, 1080.0,1080.0);
+        buyPanel.renderBuyPanel();
+        if(input.isDown(MouseButtons.LEFT)) {
+            if(buyPanel.getTankImage().getBoundingBox().intersects(input.getMousePosition())) {
+
+                currentlyBuying = buyPanel.buyTank();
+                if(currentlyBuying != null) {
+                    buyMode = true;
+                }
+
+            }
+        }
+        if(buyMode) {
+            currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
+        }
+        if(buyMode && input.wasPressed(MouseButtons.LEFT)) {
+           if(map.hasProperty((int)input.getMouseX(),(int)input.getMouseY(), "blocked")) {               buyMode = false;
+            } else {
+                /* buy it */
+                buyMode = false;
+            }
+        }
 
 
         if(input.isDown(Keys.S) && !gameRunning) {
@@ -91,4 +118,8 @@ public class ShadowDefend extends AbstractGame {
 
 
     }
+
+
+
+
 }
