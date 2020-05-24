@@ -1,19 +1,22 @@
 import bagel.Image;
 import bagel.util.Point;
 
-public class Tank extends Tower {
-    private Image image = new Image("res/Images/tank.png");
+public class SuperTank extends Tower {
+    private Image image = new Image("res/images/supertank.png");
+    private final int price = 300;
     private Point position;
-    private static final int price = 300;
+
 
     public int getPrice() {
         return price;
     }
 
+    @Override
     public Image getImage() {
         return image;
     }
 
+    @Override
     public void setPosition(Point position) {
         this.position = position;
     }

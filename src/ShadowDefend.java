@@ -10,12 +10,15 @@
 import bagel.*;
 import bagel.map.TiledMap;
 import bagel.util.Point;
+
+import java.util.ArrayList;
 import java.util.List;
 import bagel.Input;
 import bagel.util.Rectangle;
 
 public class ShadowDefend extends AbstractGame {
-    private TiledMap map;
+    private TiledMap mapOne;
+    private TiledMap mapTwo;
     private int frameCount = 0;     // counts the number of frame updates in total
     private Waves currWave;     // stores the running wave in the game
     private List<Point> polyLines;
@@ -28,6 +31,8 @@ public class ShadowDefend extends AbstractGame {
     private boolean buyMode = false;
     private Tower currentlyBuying;
     private List<Rectangle> mapBounds;
+    private ArrayList<Level> levels = new ArrayList<Level>();
+    int currentLevelIndex = 0;
     /* Main */
     public static void main(String args[]) {
 
@@ -39,9 +44,11 @@ public class ShadowDefend extends AbstractGame {
      *   Constructor
      *   Sets the game */
     public ShadowDefend(){
-
-        map = new TiledMap("res/levels/1.tmx");
-        polyLines = map.getAllPolylines().get(0);
+        mapOne = new TiledMap("res/levels/1.tmx");
+        mapTwo = new TiledMap(("res/levels/2.tmx"));
+        levels.add(new Level(mapOne));
+        levels.add(new Level(mapTwo));
+        polyLines = mapOne.getAllPolylines().get(0);
 
         gameRunning = false;
         currWave = new Waves();
@@ -56,32 +63,46 @@ public class ShadowDefend extends AbstractGame {
      * * @param input The input instance which provides access to keyboard/mouse state information.     */
     @Override
     protected void update(Input input) {
-        /**********************************/
         frameCount++;
-        map.draw(0,0,0,0, 1080.0,1080.0);
+
+        /* tower placement position validation */
+        boolean validPosition = !mapOne.hasProperty((int)input.getMouseX(),(int)input.getMouseY(), "blocked");
+        boolean insideBuyPanelRectangle = buyPanel.getBuyPanelBounds().intersects(input.getMousePosition());
+        /* render everything */
+        levels.get(currentLevelIndex).renderLevel();
         buyPanel.renderBuyPanel();
-        if(input.isDown(MouseButtons.LEFT)) {
-            if(buyPanel.getTankImage().getBoundingBox().intersects(input.getMousePosition())) {
+        levels.get(currentLevelIndex).drawTowers();
 
+
+        /* buy panel controls */
+        if(input.wasPressed(MouseButtons.LEFT) && insideBuyPanelRectangle) {
+            if(buyPanel.getTankBounds().intersects(input.getMousePosition())) {
                 currentlyBuying = buyPanel.buyTank();
-                if(currentlyBuying != null) {
-                    buyMode = true;
-                }
+            }
 
+            if(buyPanel.getSuperTankBounds().intersects(input.getMousePosition())) {
+                System.out.println("Flag red");
+                currentlyBuying = buyPanel.buySuperTank();
+            }
+
+            if(currentlyBuying != null) {
+                buyMode = true;
             }
         }
-        if(buyMode) {
+
+        if((validPosition && !insideBuyPanelRectangle) && buyMode) {
             currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
         }
-        if(buyMode && input.wasPressed(MouseButtons.LEFT)) {
-           if(map.hasProperty((int)input.getMouseX(),(int)input.getMouseY(), "blocked")) {               buyMode = false;
-            } else {
-                /* buy it */
-                buyMode = false;
-            }
+
+        if((input.wasPressed(MouseButtons.LEFT) && !insideBuyPanelRectangle) && buyMode) {
+            buyMode =false;
+            buyPanel.chargeMoney(currentlyBuying.getPrice());
+            levels.get(currentLevelIndex).addTowers(currentlyBuying);
+            currentlyBuying.setPosition(new Point(input.getMouseX(), input.getMouseY()));
         }
 
 
+        /* scaler controls */
         if(input.isDown(Keys.S) && !gameRunning) {
             gameRunning = true;
         }
@@ -101,6 +122,8 @@ public class ShadowDefend extends AbstractGame {
             currWave.updateCurrentSlicers(scaler);
         }
 
+
+
         if(gameRunning) {
             /* while in default scale(scale = 1) in 5 seconds 300 frames occur */
             if ((frameCount == 0 || (frameCount % (FRAMES_IN_FIVE_SEC / scaler)) == 0) && slicerCount < MAX_SLICERS) {
@@ -118,6 +141,7 @@ public class ShadowDefend extends AbstractGame {
 
 
     }
+
 
 
 
