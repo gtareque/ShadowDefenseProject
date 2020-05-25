@@ -1,9 +1,9 @@
 import bagel.Image;
 import bagel.util.Point;
 
-public class Tank extends Tower {
-    private Image image = new Image("res/Images/tank.png");
-    private Point position;
+public class Tank extends PassiveTower {
+    private static Image image = new Image("res/Images/tank.png");
+
     private static final int price = 300;
 
     public int getPrice() {
@@ -14,10 +14,17 @@ public class Tank extends Tower {
         return image;
     }
 
-    public void setPosition(Point position) {
-        this.position = position;
+    public static Image getIcon() {
+        return image;
     }
+
+
+
     public void draw() {
-        image.draw(position.x, position.y);
+        image.draw(getPosition().x, getPosition().y);
+    }
+
+    public static int displayPrice() {
+        return  price;
     }
 }

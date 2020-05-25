@@ -1,11 +1,17 @@
 import bagel.map.TiledMap;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Level {
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
+    private ArrayList<Waves>;
     public Level(TiledMap map) {
+
         this.map = map;
     }
 
@@ -18,9 +24,19 @@ public class Level {
     }
 
     public void drawTowers() {
-        for(int i = 0; i < towers.size(); i++) {
-            towers.get(i).draw();
+        for (Tower tower : towers) {
+            tower.draw();
         }
     }
+
+    public void createWaves(File file) throws FileNotFoundException {
+        Scanner sc = new Scanner(file);
+        while(sc.hasNextLine()) {
+            String line = sc.nextLine();
+
+        }
+    }
+
+
 
 }

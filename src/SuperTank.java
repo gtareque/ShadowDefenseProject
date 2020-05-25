@@ -1,10 +1,10 @@
 import bagel.Image;
 import bagel.util.Point;
 
-public class SuperTank extends Tower {
-    private Image image = new Image("res/images/supertank.png");
-    private final int price = 300;
-    private Point position;
+public class SuperTank extends PassiveTower {
+    private static Image image = new Image("res/images/supertank.png");
+    private static final int price = 300;
+
 
 
     public int getPrice() {
@@ -16,11 +16,16 @@ public class SuperTank extends Tower {
         return image;
     }
 
-    @Override
-    public void setPosition(Point position) {
-        this.position = position;
-    }
+
     public void draw() {
-        image.draw(position.x, position.y);
+        image.draw(getPosition().x, getPosition().y);
+    }
+
+    public static Image getIcon() {
+        return image;
+    }
+
+    public static int displayPrice() {
+        return  price;
     }
 }

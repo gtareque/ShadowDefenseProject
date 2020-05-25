@@ -4,27 +4,33 @@ import bagel.util.Rectangle;
 
 public class BuyPanel {
     private Image panelImage = new Image("res/images/buypanel.png");
-    private Image tankImage = new Image("res/Images/tank.png");
+    private Image tankImage = Tank.getIcon();
     private Rectangle tankBounds;
-    private Image superTankImage = new Image("res/Images/supertank.png");
+    private Image superTankImage = SuperTank.getIcon();
     private Rectangle superTankBounds;
-    private Image airSupportImage = new Image("res/Images/airsupport.png");
+    private Image airSupportImage = AirSupport.getIcon();
     private Rectangle airSupportBounds;
     private Rectangle panelBounds= panelImage.getBoundingBox();
-    private int cash = 500;
-    private int tankPrice = 200;
-    private int superTankPrice = 300;
+
+    private int tankPrice = Tank.displayPrice();
+    private int superTankPrice = SuperTank.displayPrice();
+    private int airSupportPrice = AirSupport.displayPrice();
+    private int cash = 2000;
     Point panelCentre = panelBounds.centre();
 
 
     public void renderBuyPanel() {
+
         panelImage.drawFromTopLeft(0,0);
         tankImage.draw(64, panelCentre.y);
         tankBounds = tankImage.getBoundingBoxAt(new Point(64, panelCentre.y));
         superTankImage.draw(184, panelCentre.y);
         superTankBounds = tankImage.getBoundingBoxAt(new Point(184, panelCentre.y));
         airSupportImage.draw(184 + 120, panelCentre.y);
+        airSupportBounds = airSupportImage.getBoundingBoxAt(new Point(184 + 120, panelCentre.y));
     }
+
+
 
 
     public Tank buyTank() {
@@ -43,13 +49,15 @@ public class BuyPanel {
         return null;
     }
 
-    public Image getTankImage() {
-        return tankImage;
+    public AirSupport buyAirSupport() {
+        if(superTankPrice <= cash) {
+            return new AirSupport();
+        }
+        System.out.println("Not Enough cash");
+        return null;
     }
 
-    public Image getSuperTankImage() {
-        return superTankImage;
-    }
+
 
     public void chargeMoney(int price) {
         cash -= price;
@@ -61,7 +69,7 @@ public class BuyPanel {
     public Rectangle getSuperTankBounds() {
         return superTankBounds;
     }
-
+    public Rectangle getAirSupportBounds() { return airSupportBounds; }
     public Rectangle getBuyPanelBounds() {
         return panelImage.getBoundingBox();
     }

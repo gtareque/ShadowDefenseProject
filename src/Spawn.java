@@ -1,0 +1,2 @@
+public class Spawn extends  {
+}

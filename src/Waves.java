@@ -16,14 +16,11 @@ public class Waves {
     private final static int MAX_SLICERS = 5;
     private Slicer[] slicers = new Slicer[MAX_SLICERS];     // Array to store all the created slicers
     private int slicerCount = 0;        // keeps count of the slicers created
-    private boolean waveComplete;       // wave status
+    private boolean waveComplete = false;       // wave status
     private int countTargetReached;     // counts the slicers that have reached end
 
     /* constructor */
-    public Waves() {
 
-        waveComplete = false;
-    }
 
     /**
      *

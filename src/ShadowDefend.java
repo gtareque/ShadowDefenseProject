@@ -81,8 +81,13 @@ public class ShadowDefend extends AbstractGame {
             }
 
             if(buyPanel.getSuperTankBounds().intersects(input.getMousePosition())) {
-                System.out.println("Flag red");
+
                 currentlyBuying = buyPanel.buySuperTank();
+            }
+
+            if(buyPanel.getAirSupportBounds().intersects(input.getMousePosition())) {
+
+                currentlyBuying = buyPanel.buyAirSupport();
             }
 
             if(currentlyBuying != null) {
