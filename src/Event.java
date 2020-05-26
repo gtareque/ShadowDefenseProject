@@ -1,9 +1,16 @@
 public abstract class Event {
-    private int delay;
-
-
+    protected int delay;
+    private boolean isOver = false;
+    public abstract void update();
     public Event(int delay) {
         this.delay = delay;
     }
 
+
+
+
+
+    public void setIsOver() {
+        isOver = true;
+    }
 }

@@ -11,6 +11,9 @@ import bagel.*;
 import bagel.map.TiledMap;
 import bagel.util.Point;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import bagel.Input;
@@ -74,6 +77,13 @@ public class ShadowDefend extends AbstractGame {
         levels.get(currentLevelIndex).drawTowers();
 
 
+        FileReader textInput = null;
+        try {
+            textInput = new FileReader("res/waves.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("flga1");
+            e.printStackTrace();
+        }
         /* buy panel controls */
         if(input.wasPressed(MouseButtons.LEFT) && insideBuyPanelRectangle) {
             if(buyPanel.getTankBounds().intersects(input.getMousePosition())) {
@@ -108,11 +118,17 @@ public class ShadowDefend extends AbstractGame {
 
 
         /* scaler controls */
-        if(input.isDown(Keys.S) && !gameRunning) {
+        if(input.wasPressed(Keys.S) && !gameRunning) {
             gameRunning = true;
+            try {
+                levels.get(currentLevelIndex).createWaves(textInput);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
-        if(input.wasPressed(Keys.L) ) {
+            if(input.wasPressed(Keys.L) ) {
 
             scaler++;
             /* update already created slicer properties */
@@ -131,10 +147,11 @@ public class ShadowDefend extends AbstractGame {
 
         if(gameRunning) {
             /* while in default scale(scale = 1) in 5 seconds 300 frames occur */
-            if ((frameCount == 0 || (frameCount % (FRAMES_IN_FIVE_SEC / scaler)) == 0) && slicerCount < MAX_SLICERS) {
-                currWave.createNewSlicer(polyLines);
-                slicerCount++;
-            }
+//            if ((frameCount == 0 || (frameCount % (FRAMES_IN_FIVE_SEC / scaler)) == 0) && slicerCount < MAX_SLICERS) {
+//                currWave.createNewSlicer(polyLines);
+//                slicerCount++;
+//            }
+            levels.get(currentLevelIndex).playLevel();
             if (!currWave.isWaveComplete()) {
                 /* move the slicer as wave not complete */
                 currWave.updateSlicerPosition(polyLines);
