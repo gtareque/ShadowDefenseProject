@@ -1,16 +1,20 @@
 import bagel.map.TiledMap;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Level {
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
-    private ArrayList<Waves> waves = new ArrayList<>();
+    private LinkedList<Waves> waves = new LinkedList<>();
+    private Waves wave;
+    private boolean status = false;
     public Level(TiledMap map) {
 
         this.map = map;
@@ -38,22 +42,21 @@ public class Level {
             String slicerType;
             String line = sc.nextLine();
             int waveIndex = Integer.parseInt(line.substring(0, line.indexOf(',')));
-            if(waves.isEmpty()) {
+            if (waves.isEmpty()) {
                 waves.add(new Waves());
             }
 
-            if(waveIndex > waves.size() - 1) {
-                System.out.println("wave index" + waveIndex);
-                System.out.println(waves.size());
+            if (waveIndex > waves.size() - 1) {
+
                 waves.add(new Waves());
             }
 
             line = line.substring(line.indexOf(',') + 1);
-            System.out.println(line);
+
             String type = line.substring(0, line.indexOf(','));
             line = line.substring(line.indexOf(',') + 1);
-            System.out.println(line);
-            if(line.contains(",")) {
+
+            if (line.contains(",")) {
 
 
                 numSpawn = Integer.parseInt(line.substring(0, line.indexOf(',')));
@@ -67,17 +70,31 @@ public class Level {
             }
 
             int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
-
         }
+        wave = waves.removeFirst();
+
 
 
     }
     public void playLevel() {
-        for (Waves wave: waves) {
-            wave.updateSlicerPosition(map.getAllPolylines().get(0));
 
-        }
+            if(waves.isEmpty() && wave.isWaveComplete()) {
+                status = true;
 
+            } else if(wave.isWaveComplete()) {
+                wave = waves.removeFirst();
+            } else {
+                wave.updateSlicerPosition(map.getAllPolylines().get(0));
+            }
+
+
+
+
+
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
 

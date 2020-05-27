@@ -4,9 +4,10 @@ public abstract class Event {
     public abstract void update();
     public Event(int delay) {
         this.delay = delay;
+
     }
 
-
+    public abstract boolean getStatus();
 
 
 

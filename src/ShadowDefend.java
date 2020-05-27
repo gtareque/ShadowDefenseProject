@@ -151,10 +151,10 @@ public class ShadowDefend extends AbstractGame {
 //                currWave.createNewSlicer(polyLines);
 //                slicerCount++;
 //            }
-            levels.get(currentLevelIndex).playLevel();
-            if (!currWave.isWaveComplete()) {
-                /* move the slicer as wave not complete */
-                currWave.updateSlicerPosition(polyLines);
+
+            if (!levels.get(currentLevelIndex).getStatus()) {
+                levels.get(currentLevelIndex).playLevel();
+
             } else {
                 /* game over */
                 Window.close();

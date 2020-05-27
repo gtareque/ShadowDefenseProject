@@ -11,7 +11,9 @@
 import bagel.util.Point;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Waves {
 
@@ -20,8 +22,8 @@ public class Waves {
     private ArrayList<Event> events = new ArrayList<>();
     private boolean waveComplete = false;       // wave status
     private int countTargetReached;     // counts the slicers that have reached end
-
-    /* constructor */
+    private Event event;
+    Queue<Event> queue = new LinkedList<>();
 
 
 
@@ -32,15 +34,43 @@ public class Waves {
      * moves the slicer
      * @param polyLines The polyline generated from the map */
     public void updateSlicerPosition(List<Point> polyLines) {
-        updateEvents(events);
-        for(int i = 0; i < slicers.size(); i++) {
+        /* checks if all wave complete and last wave is complete */
+
+        if(event == null && !queue.isEmpty() ) {
+            System.out.println("first event");
+            event = queue.remove();
+        }
+        if(event != null) {
+            if (event.getStatus()) {
+                if (queue.isEmpty()) {
+                    System.out.println("wave is complete");
+                    waveComplete = true;
+                } else {
+                    System.out.println("wave is popping");
+                    event = queue.remove();
+                }
+            }
+        }
+
+//        if(queue.isEmpty() && event.getStatus()) {
+//            waveComplete = true;
+//            return;
+//        }
+
+        if(event != null) {
+            event.update();
+        }
+
+        for (int i = 0; i < slicers.size(); i++) {
+
             /* if slicer hasn't already reached and deleted */
-            if(!slicers.get(i).getStatus()) {
+
+            if (!slicers.get(i).getStatus()) {
                 slicers.get(i).updateSlicer(polyLines);
             }
 
             /* if slicer has reached after update */
-            if(slicers.get(i).getStatus()) {
+            if (slicers.get(i).getStatus()) {
                 /* slicer i is nulled when it has reached the end, else causes null pointer exception */
                 slicers.remove(i);
                 slicers.trimToSize();
@@ -48,6 +78,7 @@ public class Waves {
             }
 
         }
+
         /* wave has reached end */
         if(slicers.isEmpty() ) {
             waveComplete = true;
@@ -81,13 +112,10 @@ public class Waves {
     }
 
     public void addEvent(Event e) {
-        events.add(e);
+        queue.add(e);
+        System.out.println(queue.size());
     }
-    private static void updateEvents(ArrayList<Event> events) {
-        for (Event event : events) {
-            event.update();
-        }
-    }
+
 
 
 
