@@ -35,31 +35,21 @@ public class Waves {
      * @param polyLines The polyline generated from the map */
     public void updateSlicerPosition(List<Point> polyLines) {
         /* checks if all wave complete and last wave is complete */
-
-        if(event == null && !queue.isEmpty() ) {
-            System.out.println("first event");
-            event = queue.remove();
-        }
-        if(event != null) {
-            if (event.getStatus()) {
-                if (queue.isEmpty()) {
-                    System.out.println("wave is complete");
-                    waveComplete = true;
-                } else {
-                    System.out.println("wave is popping");
-                    event = queue.remove();
-                }
+        if(queue.isEmpty() && event.getStatus()) {
+            waveComplete = true;
+        } else {
+            if(event == null && !queue.isEmpty()) {
+                event  = queue.remove();
+                event.update();
+            }else if(event.getStatus() && !queue.isEmpty()) {
+                event = queue.remove();
+                event.update();
+            } else {
+                event.update();
             }
         }
 
-//        if(queue.isEmpty() && event.getStatus()) {
-//            waveComplete = true;
-//            return;
-//        }
 
-        if(event != null) {
-            event.update();
-        }
 
         for (int i = 0; i < slicers.size(); i++) {
 

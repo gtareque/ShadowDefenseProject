@@ -146,15 +146,8 @@ public class ShadowDefend extends AbstractGame {
 
 
         if(gameRunning) {
-            /* while in default scale(scale = 1) in 5 seconds 300 frames occur */
-//            if ((frameCount == 0 || (frameCount % (FRAMES_IN_FIVE_SEC / scaler)) == 0) && slicerCount < MAX_SLICERS) {
-//                currWave.createNewSlicer(polyLines);
-//                slicerCount++;
-//            }
-
             if (!levels.get(currentLevelIndex).getStatus()) {
                 levels.get(currentLevelIndex).playLevel();
-
             } else {
                 /* game over */
                 Window.close();

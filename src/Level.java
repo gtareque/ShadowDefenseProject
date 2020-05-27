@@ -36,60 +36,46 @@ public class Level {
 
     public void createWaves(FileReader file) throws FileNotFoundException {
         Scanner sc = new Scanner(file);
-//        20,slicer,1000
         while(sc.hasNextLine()) {
             int numSpawn = 0;
             String slicerType;
             String line = sc.nextLine();
             int waveIndex = Integer.parseInt(line.substring(0, line.indexOf(',')));
+
             if (waves.isEmpty()) {
                 waves.add(new Waves());
             }
 
             if (waveIndex > waves.size() - 1) {
-
                 waves.add(new Waves());
             }
 
             line = line.substring(line.indexOf(',') + 1);
-
             String type = line.substring(0, line.indexOf(','));
             line = line.substring(line.indexOf(',') + 1);
 
             if (line.contains(",")) {
-
-
                 numSpawn = Integer.parseInt(line.substring(0, line.indexOf(',')));
                 line = line.substring(line.indexOf(',') + 1);
                 slicerType = line.substring(0, line.indexOf(','));
                 int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
                 Spawn event = new Spawn(numSpawn, delay, slicerType, waves.get(waveIndex), map.getAllPolylines().get(0));
                 waves.get(waveIndex).addEvent(event);
-
-
             }
 
             int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
         }
         wave = waves.removeFirst();
 
-
-
     }
+
     public void playLevel() {
 
-            if(waves.isEmpty() && wave.isWaveComplete()) {
-                status = true;
-
-            } else if(wave.isWaveComplete()) {
+           if(wave.isWaveComplete() && !waves.isEmpty()) {
                 wave = waves.removeFirst();
             } else {
                 wave.updateSlicerPosition(map.getAllPolylines().get(0));
             }
-
-
-
-
 
     }
 

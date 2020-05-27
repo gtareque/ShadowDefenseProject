@@ -10,9 +10,13 @@ public class Spawn extends Event  {
     Waves wave;
     private int initDelay;
     private boolean status = false;
+
     public Spawn (int numSpawn, int delay, String type, Waves wave, List<Point> polyline) {
-        super(delay);
-        initDelay = delay;
+
+        super( delay/1000 * (60));
+        System.out.println("delay is" + delay);
+        initDelay = delay/1000 * (60);
+        System.out.println("init delay is =" + initDelay);
         this.numSpawn = numSpawn;
         this.wave = wave;
         this.type = type;
@@ -25,14 +29,15 @@ public class Spawn extends Event  {
     public void update() {
 
         if (delay == 0 && numSpawn != 0) {
-
             delay = initDelay;
             Slicer s = createNew(type, polyline);
             wave.addSlicer((s));
-         }
+        }
+
         numSpawn--;
         delay--;
-        if(numSpawn == 0){
+        if(numSpawn == 0) {
+
             status = true;
         }
 
