@@ -21,17 +21,15 @@ public class Spawn extends Event  {
         this.wave = wave;
         this.type = type;
         this.polyline = polyline;
-        Slicer s = createNew(type, polyline);
-        wave.addSlicer((s));
-        numSpawn--;
+
     }
 
-    public void update() {
-
+    public Slicer update() {
+        Slicer s = null;
         if (delay == 0 && numSpawn != 0) {
             delay = initDelay;
-            Slicer s = createNew(type, polyline);
-            wave.addSlicer((s));
+            s = createNew(type, polyline);
+
         }
 
         numSpawn--;
@@ -40,7 +38,7 @@ public class Spawn extends Event  {
 
             status = true;
         }
-
+        return s;
     }
 
     public static Slicer createNew(String type, List<Point> polylines) {

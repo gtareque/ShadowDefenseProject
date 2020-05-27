@@ -2,7 +2,7 @@ public abstract class Event {
 
     protected int delay;
     private boolean isOver = false;
-    public abstract void update();
+    public abstract Slicer update();
 
 
 

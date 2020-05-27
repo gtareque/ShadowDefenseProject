@@ -16,6 +16,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 import bagel.Input;
 import bagel.util.Rectangle;
 
@@ -35,6 +37,7 @@ public class ShadowDefend extends AbstractGame {
     private Tower currentlyBuying;
     private List<Rectangle> mapBounds;
     private ArrayList<Level> levels = new ArrayList<Level>();
+
     int currentLevelIndex = 0;
     /* Main */
     public static void main(String args[]) {
@@ -130,17 +133,17 @@ public class ShadowDefend extends AbstractGame {
 
             if(input.wasPressed(Keys.L) ) {
 
-            scaler++;
-            /* update already created slicer properties */
-            currWave.updateCurrentSlicers(scaler);
+//            scaler++;
+//            /* update already created slicer properties */
+//            currWave.updateCurrentSlicers(scaler);
         }
         if(input.wasPressed(Keys.K) ) {
 
-            if (scaler > 1) {
-                scaler--;
-            }
-            /* update already created slicer properties */
-            currWave.updateCurrentSlicers(scaler);
+//            if (scaler > 1) {
+//                scaler--;
+//            }
+//            /* update already created slicer properties */
+//            currWave.updateCurrentSlicers(scaler);
         }
 
 
@@ -156,6 +159,8 @@ public class ShadowDefend extends AbstractGame {
 
 
     }
+
+
 
 
 

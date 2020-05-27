@@ -15,6 +15,8 @@ public class Level {
     private LinkedList<Waves> waves = new LinkedList<>();
     private Waves wave;
     private boolean status = false;
+    private ArrayList<Slicer> slicers = new ArrayList<>();
+
     public Level(TiledMap map) {
 
         this.map = map;
@@ -74,13 +76,38 @@ public class Level {
            if(wave.isWaveComplete() && !waves.isEmpty()) {
                 wave = waves.removeFirst();
             } else {
-                wave.updateSlicerPosition(map.getAllPolylines().get(0));
-            }
+                Slicer s = wave.playWaves();
+                if(s != null) {
+                    slicers.add(s);
+                }
+               for (int i = 0; i < slicers.size(); i++) {
+
+                   /* if slicer hasn't already reached and deleted */
+
+                   if (!slicers.get(i).getStatus()) {
+                       slicers.get(i).updateSlicer(map.getAllPolylines().get(0));
+                   }
+
+                   /* if slicer has reached after update */
+                   if (slicers.get(i).getStatus()) {
+                       /* slicer i is nulled when it has reached the end, else causes null pointer exception */
+                       slicers.remove(i);
+                       slicers.trimToSize();
+
+                   }
+
+               }
+
+           }
 
     }
 
     public boolean getStatus() {
         return status;
+    }
+
+    public TiledMap getMap() {
+        return map;
     }
 
 
