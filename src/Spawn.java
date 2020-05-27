@@ -42,7 +42,7 @@ public class Spawn extends Event  {
     }
 
     public static Slicer createNew(String type, List<Point> polylines) {
-        System.out.println("type is" + type);
+
         if(type.equalsIgnoreCase("slicer")) {
             System.out.println("pink");
             return new Slicer(polylines);

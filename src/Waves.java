@@ -11,9 +11,6 @@
 import bagel.util.Point;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class Waves {
 
@@ -30,20 +27,19 @@ public class Waves {
 
     public Slicer playWaves() {
         Slicer s = null;
-        if(eventIndex == events.size()) {
+
+        if ((eventIndex >= events.size())) {
             waveComplete = true;
-        }
-        else {
-            s = events.get(eventIndex).update();
-            if(events.get(eventIndex).getStatus()) {
+        } else {
+            if (events.get(eventIndex).getStatus()) {
                 eventIndex++;
+            } else {
+                
+                s = events.get(eventIndex).update();
             }
         }
+
         return s;
-
-
-
-
 
 
 

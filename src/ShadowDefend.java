@@ -122,6 +122,7 @@ public class ShadowDefend extends AbstractGame {
 
         /* scaler controls */
         if(input.wasPressed(Keys.S) && !gameRunning) {
+
             gameRunning = true;
             try {
                 levels.get(currentLevelIndex).createWaves(textInput);
@@ -131,7 +132,7 @@ public class ShadowDefend extends AbstractGame {
             }
         }
 
-            if(input.wasPressed(Keys.L) ) {
+        if(input.wasPressed(Keys.L) ) {
 
 //            scaler++;
 //            /* update already created slicer properties */

@@ -48,7 +48,7 @@ public class Level {
                 waves.add(new Waves());
             }
 
-            if (waveIndex > waves.size() - 1) {
+            if (waveIndex -1 > waves.size() - 1) {
                 waves.add(new Waves());
             }
 
@@ -61,8 +61,8 @@ public class Level {
                 line = line.substring(line.indexOf(',') + 1);
                 slicerType = line.substring(0, line.indexOf(','));
                 int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
-                Spawn event = new Spawn(numSpawn, delay, slicerType, waves.get(waveIndex), map.getAllPolylines().get(0));
-                waves.get(waveIndex).addEvent(event);
+                Spawn event = new Spawn(numSpawn, delay, slicerType, waves.get(waveIndex - 1), map.getAllPolylines().get(0));
+                waves.get(waveIndex - 1).addEvent(event);
             }
 
             int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
@@ -74,31 +74,36 @@ public class Level {
     public void playLevel() {
 
            if(wave.isWaveComplete() && !waves.isEmpty()) {
+
                 wave = waves.removeFirst();
             } else {
-                Slicer s = wave.playWaves();
-                if(s != null) {
-                    slicers.add(s);
-                }
-               for (int i = 0; i < slicers.size(); i++) {
+               Slicer s = wave.playWaves();
 
-                   /* if slicer hasn't already reached and deleted */
+               if (s != null) {
 
-                   if (!slicers.get(i).getStatus()) {
-                       slicers.get(i).updateSlicer(map.getAllPolylines().get(0));
-                   }
+                   slicers.add(s);
 
-                   /* if slicer has reached after update */
-                   if (slicers.get(i).getStatus()) {
-                       /* slicer i is nulled when it has reached the end, else causes null pointer exception */
-                       slicers.remove(i);
-                       slicers.trimToSize();
+               }
+           }
+           for (int i = 0; i < slicers.size(); i++) {
 
-                   }
+               /* if slicer hasn't already reached and deleted */
+
+               if (!slicers.get(i).getStatus()) {
+                   slicers.get(i).updateSlicer(map.getAllPolylines().get(0));
+               }
+
+               /* if slicer has reached after update */
+               if (slicers.get(i).getStatus()) {
+                   /* slicer i is nulled when it has reached the end, else causes null pointer exception */
+                   slicers.remove(i);
+                   slicers.trimToSize();
 
                }
 
            }
+
+
 
     }
 
