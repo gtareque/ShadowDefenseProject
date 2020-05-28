@@ -14,7 +14,7 @@ public abstract class Tower {
     }
 
 
-
+    public abstract double getRadius();
     public abstract  int getPrice();
     public abstract Image getImage();
     public abstract void draw();
@@ -29,6 +29,8 @@ public abstract class Tower {
             }
         }
     }
+
+    public abstract Projectile shoot(Slicer target);
 
     public boolean getCooldown() {
         return cooldown;

@@ -1,5 +1,1 @@
-1,spawn,5,slicer,300
-1,spawn,3,slicer,1000
-2,spawn,2,slicer,500
-2,spawn,3,slicer,1000
-2,spawn,2,slicer,1000
+1,spawn,8,slicer,8000

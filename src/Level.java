@@ -15,7 +15,7 @@ public class Level {
     private Waves wave;
     private boolean status = false;
     private ArrayList<Slicer> slicers = new ArrayList<>();
-    private ArrayList<Projectile> projectiles = new ArrayList<>();
+    private ArrayList<Attack> attacks = new ArrayList<>();
     public Level(TiledMap map) {
 
         this.map = map;
@@ -102,8 +102,8 @@ public class Level {
                }
 
            }
-           setTarget(towers, slicers, projectiles);
-           moveProjectiles(projectiles);
+           setTarget(towers, slicers, attacks);
+           updateAttacks(attacks);
 
 
     }
@@ -116,23 +116,22 @@ public class Level {
         return map;
     }
 
-    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers, ArrayList<Projectile> projectiles) {
+    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
         for (Tower tower : towers) {
             tower.updateCooldown();
             for (Slicer slicer : slicers) {
                 double distance = tower.getPosition().distanceTo(slicer.position());
-                if (distance < 200.0 & !tower.getCooldown()) {
-                    projectiles.add(new Projectile(slicer, tower.getPosition()));
+                if (distance < tower.getRadius() & !tower.getCooldown()) {
+
+                    attacks.add(new Attack(slicer, tower));
                     tower.startCooldown();
                 }
             }
         }
     }
 
-    public static void moveProjectiles(ArrayList<Projectile> projectiles) {
-        for (Projectile projectile : projectiles) {
-            projectile.move();
-        }
+    public static void updateAttacks(ArrayList<Attack> attacks) {
+        attacks.removeIf(Attack::updateAttack);
     }
 
 }

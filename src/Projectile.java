@@ -3,28 +3,31 @@ import bagel.util.Point;
 import bagel.util.Vector2;
 
 public class Projectile {
-    private Image img = new Image("res/images/tank_projectile.png");
+    private Image img;
     private Slicer target;
-    private Point startPosition;
     private Vector2 initVector;
-    private double speed = 10;
+    private double speed = 10.0;
     private Vector2 velocity;
-    public Projectile(Slicer target, Point startPosition) {
+
+    public Projectile(Slicer target, Point startPosition, Image img) {
         this.target = target;
-        this.startPosition = startPosition;
         initVector = startPosition.asVector();
-        velocity = getVelocity(target.position());
+        this.img = img;
+
     }
 
     public void move() {
+        velocity = getVelocity(target.position().asVector(), initVector, speed);
         initVector = initVector.add(velocity);
         img.draw(initVector.x, initVector.y);
 
 
     }
-    public static Vector2 getVelocity(Point slicerPosition ) {
-        double theta = Math.atan2(slicerPosition.y, slicerPosition.x);
-        Vector2 velocity = new Vector2(10.0 * Math.cos(theta), 10 * Math.sin(theta));
+
+    public static Vector2 getVelocity(Vector2 slicerPosition, Vector2 projectilePosition, double speed ) {
+        Vector2 displacement = slicerPosition.sub(projectilePosition);
+        double theta = Math.atan2(displacement.y, displacement.x);
+        Vector2 velocity = new Vector2(speed * Math.cos(theta), speed * Math.sin(theta));
         return velocity;
     }
 

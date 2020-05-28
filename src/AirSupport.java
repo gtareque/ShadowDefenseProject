@@ -2,6 +2,7 @@ import bagel.Image;
 import bagel.util.Point;
 
 public class AirSupport extends Tower {
+    double radius = 100;
     private static Image image = new Image("res/images/airsupport.png");
 
     private static final int price = 300;
@@ -25,5 +26,14 @@ public class AirSupport extends Tower {
 
     public static int displayPrice() {
         return  price;
+    }
+
+    @Override
+    public Projectile shoot(Slicer target) {
+        return null;
+    }
+    @Override
+    public double getRadius() {
+        return radius;
     }
 }
