@@ -15,7 +15,7 @@ public class Level {
     private Waves wave;
     private boolean status = false;
     private ArrayList<Slicer> slicers = new ArrayList<>();
-
+    private ArrayList<Projectile> projectiles = new ArrayList<>();
     public Level(TiledMap map) {
 
         this.map = map;
@@ -102,7 +102,8 @@ public class Level {
                }
 
            }
-
+           setTarget(towers, slicers, projectiles);
+           moveProjectiles(projectiles);
 
 
     }
@@ -115,9 +116,22 @@ public class Level {
         return map;
     }
 
-    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers) {
-        for (int i = 0; i < towers.size(), i++) {
-            towers.get(i).getPosition().distanceTo()
+    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers, ArrayList<Projectile> projectiles) {
+        for (Tower tower : towers) {
+            tower.updateCooldown();
+            for (Slicer slicer : slicers) {
+                double distance = tower.getPosition().distanceTo(slicer.position());
+                if (distance < 200.0 & !tower.getCooldown()) {
+                    projectiles.add(new Projectile(slicer, tower.getPosition()));
+                    tower.startCooldown();
+                }
+            }
+        }
+    }
+
+    public static void moveProjectiles(ArrayList<Projectile> projectiles) {
+        for (Projectile projectile : projectiles) {
+            projectile.move();
         }
     }
 

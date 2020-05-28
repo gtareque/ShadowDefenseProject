@@ -151,8 +151,8 @@ public class Slicer {
     }
 
 
-    public Vector2 position(){
-        return initVector;
+    public Point position(){
+        return new Point(initVector.x, initVector.y);
 
     }
 }
