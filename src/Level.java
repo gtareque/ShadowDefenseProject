@@ -1,10 +1,9 @@
 import bagel.map.TiledMap;
 
 
-import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -76,13 +75,14 @@ public class Level {
            if(wave.isWaveComplete() && !waves.isEmpty()) {
 
                 wave = waves.removeFirst();
-            } else {
+            }
+           if(!wave.isWaveComplete()){
                Slicer s = wave.playWaves();
 
                if (s != null) {
 
                    slicers.add(s);
-
+                    System.out.println("SLicers size: "+ slicers.size());
                }
            }
            for (int i = 0; i < slicers.size(); i++) {
@@ -115,6 +115,10 @@ public class Level {
         return map;
     }
 
-
+    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers) {
+        for (int i = 0; i < towers.size(), i++) {
+            towers.get(i).getPosition().distanceTo()
+        }
+    }
 
 }

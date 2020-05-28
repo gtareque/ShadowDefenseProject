@@ -149,4 +149,10 @@ public class Slicer {
     public static void setScaler(int value) {
         scaler = value;
     }
+
+
+    public Vector2 position(){
+        return initVector;
+
+    }
 }
