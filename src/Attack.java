@@ -6,9 +6,9 @@ public class Attack {
 
     Slicer target;
     Projectile projectile;
-    Tower tower;
+    ActiveTower tower;
     double radius;
-    public Attack(Slicer target, Tower tower){
+    public Attack(Slicer target, ActiveTower tower){
         this.target = target;
         projectile = tower.shoot(target);
         this.tower = tower;

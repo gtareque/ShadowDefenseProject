@@ -11,6 +11,8 @@ import java.util.Scanner;
 public class Level {
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
+    private ArrayList<ActiveTower> passiveTowers = new ArrayList<>();
+    private ArrayList<AirSupport> activeTowers = new ArrayList<>();
     private LinkedList<Waves> waves = new LinkedList<>();
     private Waves wave;
     private boolean status = false;
@@ -27,13 +29,15 @@ public class Level {
 
     public void addTowers(Tower t) {
         towers.add(t);
-        if(t instanceof AirSupport) {
-            System.out.println("YESSSS");
+        if(t instanceof ActiveTower) {
+            passiveTowers.add((ActiveTower)t);
+        } else {
+            activeTowers.add((AirSupport) t);
         }
     }
 
     public void drawTowers() {
-        for (Tower tower : towers) {
+        for (ActiveTower tower : passiveTowers) {
             tower.draw();
         }
     }
@@ -105,8 +109,9 @@ public class Level {
                }
 
            }
-           setTarget(towers, slicers, attacks);
+           setTarget(passiveTowers, slicers, attacks);
            updateAttacks(attacks);
+           updateAirAttacks(activeTowers);
 
 
     }
@@ -119,14 +124,14 @@ public class Level {
         return map;
     }
 
-    public static void setTarget(ArrayList<Tower> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
-        for (Tower tower : towers) {
+    public static void setTarget(ArrayList<ActiveTower> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
+        for (ActiveTower tower : towers) {
             tower.updateCooldown();
             for (Slicer slicer : slicers) {
                 double distance = tower.getPosition().distanceTo(slicer.position());
                 if (distance < tower.getRadius() & !tower.getCooldown()) {
 
-                    attacks.add(new Attack(slicer, tower));
+                    attacks.add(new Attack(slicer, (ActiveTower)tower));
                     tower.startCooldown();
                 }
             }
@@ -135,6 +140,13 @@ public class Level {
 
     public static void updateAttacks(ArrayList<Attack> attacks) {
         attacks.removeIf(Attack::updateAttack);
+    }
+
+    public static void updateAirAttacks(ArrayList<AirSupport> airSupports) {
+        for(AirSupport plane : airSupports) {
+            plane.move();
+            plane.draw();
+        }
     }
 
 }

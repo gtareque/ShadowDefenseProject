@@ -2,7 +2,7 @@ import bagel.DrawOptions;
 import bagel.Image;
 import bagel.util.Point;
 
-public class Tank extends PassiveTower {
+public class Tank extends ActiveTower {
     private Image projectileImage = new Image("res/Images/tank_projectile.png");
     private static Image image = new Image("res/Images/tank.png");
     double radius = 100;
@@ -27,7 +27,7 @@ public class Tank extends PassiveTower {
     public void draw() {
 
         image.draw(getPosition().x, getPosition().y, new DrawOptions().setRotation(getDrawAngle()));
-        setDrawAngle(0);
+
     }
 
     public static int displayPrice() {

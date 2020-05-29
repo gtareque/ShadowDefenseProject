@@ -1,11 +1,13 @@
+import bagel.DrawOptions;
 import bagel.Image;
 import bagel.util.Point;
+import bagel.util.Vector2;
 
-public class AirSupport extends Tower {
-    double radius = 100;
-    private final int COOLDOWN_PERIOD = 60;
-    private boolean cooldown = false;
-    private int cooldownFrames = 0;
+public class AirSupport extends Tower implements Flyable{
+    private Vector2 velocity = new Vector2(10 , 0);
+    private Vector2 position;
+    private boolean horizontal = false;
+
     private static Image image = new Image("res/images/airsupport.png");
 
     private static final int price = 300;
@@ -17,10 +19,16 @@ public class AirSupport extends Tower {
     public Image getImage() {
         return image;
     }
-
+    public AirSupport() {
+        horizontal = true;
+    }
 
     public void draw() {
-        image.draw(getPosition().x, getPosition().y);
+        if(horizontal == true) {
+            image.draw(position.x, position.y, new DrawOptions().setRotation(Math.PI/2));
+        } else {
+            image.draw(position.x, position.y);
+        }
     }
 
     public static Image getIcon() {
@@ -31,21 +39,20 @@ public class AirSupport extends Tower {
         return  price;
     }
 
-    @Override
-    public Projectile shoot(Slicer target) {
+    public void move() {
+        position = position.add(velocity);
+
+    }
+    public Point drop() {
         return null;
     }
-    @Override
-    public double getRadius() {
-        return radius;
+
+
+    public void setFlyingPath(Point position) {
+        this.position = new Vector2(0, position.y);
+
+
     }
 
-    public void updateCooldown() {
-        if(cooldown) {
-            cooldownFrames++;
-            if((cooldownFrames % COOLDOWN_PERIOD) == 0) {
-                cooldown = false;
-            }
-        }
-    }
+
 }

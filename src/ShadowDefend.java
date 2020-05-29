@@ -112,7 +112,11 @@ public class ShadowDefend extends AbstractGame {
             buyMode =false;
             buyPanel.chargeMoney(currentlyBuying.getPrice());
             levels.get(currentLevelIndex).addTowers(currentlyBuying);
-            currentlyBuying.setPosition(new Point(input.getMouseX(), input.getMouseY()));
+            if(currentlyBuying instanceof AirSupport) {
+                ((AirSupport) currentlyBuying).setFlyingPath(new Point(input.getMouseX(), input.getMouseY()));
+            } else {
+                currentlyBuying.setPosition(new Point(input.getMouseX(), input.getMouseY()));
+            }
         }
 
 

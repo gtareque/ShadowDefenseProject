@@ -2,7 +2,7 @@ import bagel.DrawOptions;
 import bagel.Image;
 import bagel.util.Point;
 
-public class SuperTank extends PassiveTower {
+public class SuperTank extends ActiveTower {
     private static Image image = new Image("res/images/supertank.png");
     private Image projectileImage = new Image("res/Images/supertank_projectile.png");
     private static final int price = 300;
@@ -23,7 +23,7 @@ public class SuperTank extends PassiveTower {
     public void draw() {
 
         image.draw(getPosition().x, getPosition().y, new DrawOptions().setRotation(getDrawAngle()));
-        setDrawAngle(0);
+
     }
 
     public static Image getIcon() {

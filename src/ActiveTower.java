@@ -1,25 +1,17 @@
 import bagel.Image;
 import bagel.util.Point;
 
-public abstract class PassiveTower extends Tower {
-    private Slicer target;
+public abstract class ActiveTower extends Tower {
 
-    private Point position;
     private double drawAngle = 0;
 
 
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-    public Point getPosition() {
-        return position;
-    }
+
 
 
     public abstract double getRadius();
-    public abstract  int getPrice();
-    public abstract Image getImage();
-    public abstract void draw();
+
+
     protected boolean cooldown = false;
 
     public void startCooldown() {
