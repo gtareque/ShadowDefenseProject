@@ -1,1 +1,1 @@
-1,spawn,8,slicer,8000
+1,spawn,1,slicer,8000

@@ -27,6 +27,9 @@ public class Level {
 
     public void addTowers(Tower t) {
         towers.add(t);
+        if(t instanceof AirSupport) {
+            System.out.println("YESSSS");
+        }
     }
 
     public void drawTowers() {
