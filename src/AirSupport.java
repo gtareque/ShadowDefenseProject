@@ -3,10 +3,20 @@ import bagel.Image;
 import bagel.util.Point;
 import bagel.util.Vector2;
 
-public class AirSupport extends Tower implements Flyable{
-    private Vector2 velocity = new Vector2(10 , 0);
+import java.util.Random;
+
+public class AirSupport extends Tower {
+    Random rand = new Random();
+    private Vector2 velocity = new Vector2(5 , 0);
     private Vector2 position;
     private boolean horizontal = false;
+    private int framesToDetonate = 60;
+    private int currentFrames = 0;
+
+    public AirSupport() {
+        framesToDetonate = rand.nextInt(180);
+        horizontal = true;
+    }
 
     private static Image image = new Image("res/images/airsupport.png");
 
@@ -19,12 +29,10 @@ public class AirSupport extends Tower implements Flyable{
     public Image getImage() {
         return image;
     }
-    public AirSupport() {
-        horizontal = true;
-    }
+
 
     public void draw() {
-        if(horizontal == true) {
+        if(horizontal) {
             image.draw(position.x, position.y, new DrawOptions().setRotation(Math.PI/2));
         } else {
             image.draw(position.x, position.y);
@@ -43,7 +51,15 @@ public class AirSupport extends Tower implements Flyable{
         position = position.add(velocity);
 
     }
-    public Point drop() {
+    public Bomb drop() {
+        if(currentFrames == framesToDetonate) {
+            currentFrames = 0;
+            framesToDetonate = rand.nextInt(180);
+            return new Bomb(position.asPoint());
+
+        } else {
+            currentFrames++;
+        }
         return null;
     }
 

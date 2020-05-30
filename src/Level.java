@@ -1,5 +1,5 @@
 import bagel.map.TiledMap;
-
+import bagel.util.Point;
 
 
 import java.io.FileNotFoundException;
@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Level {
+    private ArrayList<Bomb> bombs = new ArrayList<>();
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
     private ArrayList<ActiveTower> passiveTowers = new ArrayList<>();
@@ -111,8 +112,8 @@ public class Level {
            }
            setTarget(passiveTowers, slicers, attacks);
            updateAttacks(attacks);
-           updateAirAttacks(activeTowers);
-
+           updateAirAttacks(activeTowers, bombs);
+           updateBombs(bombs, slicers);
 
     }
 
@@ -142,11 +143,33 @@ public class Level {
         attacks.removeIf(Attack::updateAttack);
     }
 
-    public static void updateAirAttacks(ArrayList<AirSupport> airSupports) {
+    public static void updateAirAttacks(ArrayList<AirSupport> airSupports, ArrayList<Bomb> bombs ) {
         for(AirSupport plane : airSupports) {
             plane.move();
             plane.draw();
+            Bomb bomb = plane.drop();
+            if(bomb != null) {
+                bombs.add(bomb);
+            }
         }
     }
+
+    public static void updateBombs(ArrayList<Bomb> bombs, ArrayList<Slicer> slicers) {
+        ArrayList<Bomb> toRemove = new ArrayList<>();
+
+
+
+
+        for (Bomb bomb: bombs) {
+            if(bomb.update(slicers)) {
+                toRemove.add(bomb);
+            }
+
+        }
+        for (Bomb bomb : toRemove) {
+            bombs.remove(bomb);
+        }
+    }
+
 
 }

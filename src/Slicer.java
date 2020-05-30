@@ -13,6 +13,16 @@ import bagel.DrawOptions;
 
 public class Slicer {
 
+
+    private Image slicerImage = new Image("res/images/slicer.png");
+    private int health = 1;
+    private double speed = 1;
+    private double reward = 2;
+    private int penalty = 1;
+
+
+
+    /****************************/
     private int polylineIndex = 1;      // the targeted polyline point point index
     private double stepsCounter = 0;    // steps taken towards the target
     private double displacementLength;    // magnitude of the displacement between two vector points
@@ -22,6 +32,7 @@ public class Slicer {
     private int targetFrames;       // the number of times the velocity must be added to initVector
     private boolean status = false;     // flag for checking if it has completed journey
     private static int scaler = 1;   // timescale multiplier
+
 
 
     /**
@@ -34,18 +45,19 @@ public class Slicer {
         initVector = new Vector2(polyLines.get(0).x, polyLines.get(0).y);
         finalVector = new Vector2(polyLines.get(1).x, polyLines.get(1).y);
         displacementLength = finalVector.sub(initVector).length();
-        velocity = getVelocity(initVector, finalVector).mul(scaler);
+        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
 
         /* calculate target frames */
         targetFrames = (int)(displacementLength / velocity.length());
 
         /* find and setup image rotation */
         double theta = getTheta(velocity);
-        Image slicerImage = new Image("res/images/slicer.png");
-        slicerImage.draw(initVector.x, initVector.y, new DrawOptions().setRotation(theta));
+
 
 
     }
+
+
 
     /**
      *
@@ -62,7 +74,7 @@ public class Slicer {
                 initVector = finalVector;
                 finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
                 displacementLength = finalVector.sub(initVector).length();
-                velocity = getVelocity(initVector, finalVector).mul(scaler);
+                velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
                 targetFrames = (int) (displacementLength / velocity.length());
 
             }
@@ -79,7 +91,6 @@ public class Slicer {
 
             /* get the theta for rotation */
             double theta = getTheta(velocity);
-            Image slicerImage = new Image("res/images/slicer.png");
             slicerImage.draw(initVector.x, initVector.y, new DrawOptions().setRotation(theta));
         }
         else {
@@ -94,18 +105,20 @@ public class Slicer {
     /**
      *
      * Calculates the velocity of the slicer
-     * @param polyLines The polyline generated from the map */
+     * @param v1 initial vector
+     * @param v2 final vector */
 
-    public static Vector2 getVelocity(Vector2 v1, Vector2 v2) {
+
+    public static Vector2 getVelocity(Vector2 v1, Vector2 v2, double speed) {
         Vector2 direction = v2.sub(v1);
-        return direction.normalised();
+        return direction.normalised().mul(speed);
 
     }
 
     /**
      *
      * Calculates the direction coordinates of the velocity
-     * @param givenVelocity The velocity whose direction is to be calculated */
+     * @param velocity The velocity whose direction is to be calculated */
 
     public static double getTheta(Vector2 velocity) {
         return Math.atan2(velocity.y, velocity.x);
@@ -126,7 +139,7 @@ public class Slicer {
     public void updateSlicer() {
         displacementLength = finalVector.sub(initVector).length();
         stepsCounter = 0;
-        velocity = getVelocity(initVector, finalVector).mul(scaler);
+        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
         targetFrames = (int) (displacementLength / velocity.length());
     }
 
@@ -155,4 +168,33 @@ public class Slicer {
         return new Point(initVector.x, initVector.y);
 
     }
+
+    protected void setHealth(int health) {
+        this.health = this.health * health;
+    }
+
+    protected void setSpeed(double speed) {
+        this.speed = this.speed * speed;
+    }
+
+    protected void setReward(double reward) {
+        this.reward = reward;
+    }
+
+    protected void setPenalty(int penalty) {
+        this.penalty = penalty;
+    }
+
+    protected  void setSlicerImage(Image image) {
+        slicerImage = image;
+    }
+
+    public boolean kill(int damage) {
+        health -= damage;
+        if(health <= 0) {
+            return true;
+        }
+        return false;
+    }
+
 }
