@@ -16,7 +16,7 @@ public class Slicer {
 
     private Image slicerImage = new Image("res/images/slicer.png");
     private int health = 1;
-    private double speed = 1;
+    private double speed = 2;
     private double reward = 2;
     private int penalty = 1;
 

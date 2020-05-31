@@ -46,10 +46,17 @@ public class Spawn extends Event  {
     public static Slicer createNew(String type, List<Point> polylines) {
 
         if(type.equalsIgnoreCase("slicer")) {
-            System.out.println("pink");
             return new Slicer(polylines);
+        } else if(type.equals("superslicer")) {
+            return new SuperSlicer(polylines);
+        } else if(type.equals("megaslicer")) {
+            return new MegaSlicer(polylines);
+        } else if(type.equals("apexslicer")) {
+            return  new ApexSlicer(polylines);
+        } else {
+            return  null;
         }
-        return null;
+
     }
 
     public boolean getStatus() {

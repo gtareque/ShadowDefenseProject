@@ -33,7 +33,9 @@ public class Level {
         if(t instanceof ActiveTower) {
             passiveTowers.add((ActiveTower)t);
         } else {
+
             activeTowers.add((AirSupport) t);
+            ((AirSupport) t).setHorizontal((towers.size() - 1) % 2 == 0);
         }
     }
 

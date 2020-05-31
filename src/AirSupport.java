@@ -6,7 +6,7 @@ import bagel.util.Vector2;
 import java.util.Random;
 
 public class AirSupport extends Tower {
-    Random rand = new Random();
+    private Random rand = new Random();
     private Vector2 velocity = new Vector2(5 , 0);
     private Vector2 position;
     private boolean horizontal = false;
@@ -15,7 +15,7 @@ public class AirSupport extends Tower {
 
     public AirSupport() {
         framesToDetonate = rand.nextInt(180);
-        horizontal = true;
+
     }
 
     private static Image image = new Image("res/images/airsupport.png");
@@ -70,5 +70,7 @@ public class AirSupport extends Tower {
 
     }
 
-
+    public void setHorizontal(boolean isEven) {
+        horizontal = isEven;
+    }
 }

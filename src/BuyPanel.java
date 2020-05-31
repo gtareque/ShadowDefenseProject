@@ -15,7 +15,7 @@ public class BuyPanel {
     private int tankPrice = Tank.displayPrice();
     private int superTankPrice = SuperTank.displayPrice();
     private int airSupportPrice = AirSupport.displayPrice();
-    private int cash = 2000;
+    private int cash = 50000;
     Point panelCentre = panelBounds.centre();
 
 
