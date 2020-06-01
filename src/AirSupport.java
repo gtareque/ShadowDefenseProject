@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class AirSupport extends Tower {
     private Random rand = new Random();
-    private Vector2 velocity = new Vector2(5 , 0);
+    private Vector2 velocity;
     private Vector2 position;
     private boolean horizontal = false;
     private int framesToDetonate = 60;
@@ -35,7 +35,7 @@ public class AirSupport extends Tower {
         if(horizontal) {
             image.draw(position.x, position.y, new DrawOptions().setRotation(Math.PI/2));
         } else {
-            image.draw(position.x, position.y);
+            image.draw(position.x, position.y, new DrawOptions().setRotation(Math.PI));
         }
     }
 
@@ -65,7 +65,13 @@ public class AirSupport extends Tower {
 
 
     public void setFlyingPath(Point position) {
-        this.position = new Vector2(0, position.y);
+        if (horizontal) {
+            this.position = new Vector2(0, position.y);
+            velocity = new Vector2(5 , 0);
+        } else {
+            this.position = new Vector2(position.x, 0);
+            velocity = new Vector2(0 , 5);
+        }
 
 
     }

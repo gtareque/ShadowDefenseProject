@@ -1,2 +1,2 @@
-1,spawn,20,slicer,3000
-2,spawn,5,superslicer,3000
+1,spawn,20,slicer,500
+2,spawn,5,superslicer,300

@@ -113,7 +113,7 @@ public class Level {
 
            }
            setTarget(passiveTowers, slicers, attacks);
-           updateAttacks(attacks);
+           updateAttacks(attacks, slicers);
            updateAirAttacks(activeTowers, bombs);
            updateBombs(bombs, slicers);
 
@@ -141,8 +141,9 @@ public class Level {
         }
     }
 
-    public static void updateAttacks(ArrayList<Attack> attacks) {
-        attacks.removeIf(Attack::updateAttack);
+    public static void updateAttacks(ArrayList<Attack> attacks, ArrayList<Slicer> targets) {
+
+        attacks.removeIf(attack -> attack.updateAttack(targets));
     }
 
     public static void updateAirAttacks(ArrayList<AirSupport> airSupports, ArrayList<Bomb> bombs ) {
@@ -157,20 +158,12 @@ public class Level {
     }
 
     public static void updateBombs(ArrayList<Bomb> bombs, ArrayList<Slicer> slicers) {
-        ArrayList<Bomb> toRemove = new ArrayList<>();
 
 
 
+        bombs.removeIf(bomb -> bomb.update(slicers));
 
-        for (Bomb bomb: bombs) {
-            if(bomb.update(slicers)) {
-                toRemove.add(bomb);
-            }
 
-        }
-        for (Bomb bomb : toRemove) {
-            bombs.remove(bomb);
-        }
     }
 
 

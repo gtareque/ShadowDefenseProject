@@ -7,6 +7,7 @@
 
 import bagel.Image;
 import bagel.util.Point;
+import bagel.util.Rectangle;
 import bagel.util.Vector2;
 import java.util.List;
 import bagel.DrawOptions;
@@ -169,23 +170,27 @@ public class Slicer {
 
     }
 
-    protected void setHealth(int health) {
+    void setHealth(int health) {
         this.health = this.health * health;
     }
 
-    protected void setSpeed(double speed) {
+    public int getHealth() {
+        return health;
+    }
+
+    void setSpeed(double speed) {
         this.speed = this.speed * speed;
     }
 
-    protected void setReward(double reward) {
+    void setReward(double reward) {
         this.reward = reward;
     }
 
-    protected void setPenalty(int penalty) {
+    void setPenalty(int penalty) {
         this.penalty = penalty;
     }
 
-    protected  void setSlicerImage(Image image) {
+    void setSlicerImage(Image image) {
         slicerImage = image;
     }
 
@@ -197,4 +202,7 @@ public class Slicer {
         return false;
     }
 
+    public Rectangle getBounds() {
+        return slicerImage.getBoundingBoxAt(initVector.asPoint());
+    }
 }

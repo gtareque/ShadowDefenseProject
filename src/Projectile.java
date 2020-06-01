@@ -31,5 +31,7 @@ public class Projectile {
         return velocity;
     }
 
-
+    public Point getCenter() {
+        return initVector.asPoint();
+    }
 }
