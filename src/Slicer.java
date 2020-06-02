@@ -33,7 +33,7 @@ public class Slicer {
     private int targetFrames;       // the number of times the velocity must be added to initVector
     private boolean status = false;     // flag for checking if it has completed journey
     private static int scaler = 1;   // timescale multiplier
-
+    private List<Point> polyLines;
 
 
     /**
@@ -41,7 +41,7 @@ public class Slicer {
      * Gives the initial slicer properties such as velocity and target frames
      * @param polyLines The polyline generated from the map */
     public Slicer(List<Point> polyLines) {
-
+        this.polyLines = polyLines;
         /* calculate displacement and velocity */
         initVector = new Vector2(polyLines.get(0).x, polyLines.get(0).y);
         finalVector = new Vector2(polyLines.get(1).x, polyLines.get(1).y);
@@ -54,17 +54,31 @@ public class Slicer {
         /* find and setup image rotation */
         double theta = getTheta(velocity);
 
-
-
     }
 
+
+
+    public Slicer(List<Point> polyLines, Vector2 initVector, Vector2 finalVector, int polylineIndex) {
+        this.polyLines = polyLines;
+        this.initVector = initVector;
+        this.finalVector = finalVector;
+        displacementLength = finalVector.sub(initVector).length();
+        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
+
+        /* calculate target frames */
+        targetFrames = (int)(displacementLength / velocity.length());
+
+        /* find and setup image rotation */
+        double theta = getTheta(velocity);
+        this.polylineIndex = polylineIndex;
+    }
 
 
     /**
      *
      * updates slicer's movements
      * @param polyLines The polyline generated from the map */
-    public void updateSlicer( List<Point> polyLines) {
+    public void updateSlicer() {
         /* keeps moving till end of polyline */
         if(polylineIndex < polyLines.size() - 1) {
             /* if a poly line point is reached */
@@ -123,7 +137,6 @@ public class Slicer {
 
     public static double getTheta(Vector2 velocity) {
         return Math.atan2(velocity.y, velocity.x);
-
    }
 
 
@@ -137,12 +150,12 @@ public class Slicer {
     /**
      *
      * Updates slicer properties when scaler has been changed */
-    public void updateSlicer() {
-        displacementLength = finalVector.sub(initVector).length();
-        stepsCounter = 0;
-        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
-        targetFrames = (int) (displacementLength / velocity.length());
-    }
+//    public void updateSlicer() {
+//        displacementLength = finalVector.sub(initVector).length();
+//        stepsCounter = 0;
+//        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
+//        targetFrames = (int) (displacementLength / velocity.length());
+//    }
 
     /**
      *
@@ -196,6 +209,7 @@ public class Slicer {
 
     public boolean kill(int damage) {
         health -= damage;
+        System.out.println(health);
         if(health <= 0) {
             return true;
         }
@@ -204,5 +218,21 @@ public class Slicer {
 
     public Rectangle getBounds() {
         return slicerImage.getBoundingBoxAt(initVector.asPoint());
+    }
+
+    public List<Point> getPolyLines() {
+        return polyLines;
+    }
+
+    public Vector2 getInitVector() {
+        return initVector;
+    }
+
+    public Vector2 getFinalVector() {
+        return finalVector;
+    }
+
+    public int getPolylineIndex() {
+        return polylineIndex;
     }
 }

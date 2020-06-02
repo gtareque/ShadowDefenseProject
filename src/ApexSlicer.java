@@ -1,9 +1,10 @@
 import bagel.Image;
 import bagel.util.Point;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ApexSlicer extends Slicer {
+public class ApexSlicer extends Slicer implements Respwanable {
     private final static Image IMAGE = new Image("res/images/apexslicer.png");
     private final static int HEALTH = 25;
     private final static double SPEED = 0.5;
@@ -17,5 +18,10 @@ public class ApexSlicer extends Slicer {
         setPenalty(PENALTY);
         setSlicerImage(IMAGE);
 
+    }
+    public void respawn(ArrayList<Slicer> array) {
+        for (int i = 0; i < 4; i ++) {
+            array.add(new MegaSlicer(getPolyLines(), getInitVector(), getFinalVector(), getPolylineIndex()));
+        }
     }
 }

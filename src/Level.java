@@ -100,7 +100,7 @@ public class Level {
                /* if slicer hasn't already reached and deleted */
 
                if (!slicers.get(i).getStatus()) {
-                   slicers.get(i).updateSlicer(map.getAllPolylines().get(0));
+                   slicers.get(i).updateSlicer();
                }
 
                /* if slicer has reached after update */

@@ -36,7 +36,7 @@ public abstract class ActiveTower extends Tower {
     public double getDrawAngle() {
         return drawAngle;
     }
-
+    public abstract int getDamage();
 
 
 }

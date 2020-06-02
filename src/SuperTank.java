@@ -9,6 +9,7 @@ public class SuperTank extends ActiveTower {
     double radius = 150;
     private int cooldownFrames = 0;
     private final int COOLDOWN_PERIOD = 30;
+    private int damage = 3;
 
     public int getPrice() {
         return price;
@@ -49,5 +50,9 @@ public class SuperTank extends ActiveTower {
                 cooldown = false;
             }
         }
+    }
+
+    public int getDamage() {
+        return  damage;
     }
 }

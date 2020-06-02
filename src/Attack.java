@@ -26,11 +26,15 @@ public class Attack {
             tower.setDrawAngle(Math.atan2(displacement.y, displacement.x) + Math.PI/2);
             projectile.move();
             if(target.getBounds().intersects(projectile.getCenter())) {
-                boolean isDead = target.kill(1);
+                boolean isDead = target.kill(tower.getDamage());
                 if(isDead) {
+                    if(target instanceof Respwanable) {
+                        ((Respwanable) target).respawn(targets);
+                    }
                     targets.remove(target);
                     targets.trimToSize();
                 }
+                return true;
             }
             return false;
         }
