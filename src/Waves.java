@@ -59,10 +59,7 @@ public class Waves {
 
 
     public void addEvent(Event e) {
-
         events.add(e);
-
-
     }
 
 

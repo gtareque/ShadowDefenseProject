@@ -235,4 +235,16 @@ public class Slicer {
     public int getPolylineIndex() {
         return polylineIndex;
     }
+
+    public static int getPenalty() {
+        return 1;
+    }
+
+    public int penalize(){
+        return 1;
+    }
+
+    public double getReward() {
+        return reward;
+    }
 }

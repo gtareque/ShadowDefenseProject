@@ -1,7 +1,4 @@
 import bagel.map.TiledMap;
-import bagel.util.Point;
-
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,6 +6,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Level {
+    private static double reward;
     private ArrayList<Bomb> bombs = new ArrayList<>();
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
@@ -19,6 +17,7 @@ public class Level {
     private boolean status = false;
     private ArrayList<Slicer> slicers = new ArrayList<>();
     private ArrayList<Attack> attacks = new ArrayList<>();
+    public int penalty = 0;
     public Level(TiledMap map) {
 
         this.map = map;
@@ -72,9 +71,13 @@ public class Level {
                 int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
                 Spawn event = new Spawn(numSpawn, delay, slicerType, waves.get(waveIndex - 1), map.getAllPolylines().get(0));
                 waves.get(waveIndex - 1).addEvent(event);
+            }else {
+
+                int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
+                Delay event = (new Delay(delay));
+                waves.get(waveIndex - 1).addEvent((event));
             }
 
-            int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
         }
         wave = waves.removeFirst();
 
@@ -92,7 +95,7 @@ public class Level {
                if (s != null) {
 
                    slicers.add(s);
-                    System.out.println("SLicers size: "+ slicers.size());
+
                }
            }
            for (int i = 0; i < slicers.size(); i++) {
@@ -106,6 +109,8 @@ public class Level {
                /* if slicer has reached after update */
                if (slicers.get(i).getStatus()) {
                    /* slicer i is nulled when it has reached the end, else causes null pointer exception */
+                   penalty += slicers.get(i).penalize();
+
                    slicers.remove(i);
                    slicers.trimToSize();
 
@@ -142,8 +147,17 @@ public class Level {
     }
 
     public static void updateAttacks(ArrayList<Attack> attacks, ArrayList<Slicer> targets) {
+        reward = 0;
+        for(int i = 0; i < attacks.size(); i++) {
+            if(attacks.get(i).updateAttack(targets)) {
+                reward += attacks.get(i).getReward();
+                attacks.remove(i);
+                attacks.trimToSize();
 
-        attacks.removeIf(attack -> attack.updateAttack(targets));
+            }
+        }
+
+
     }
 
     public static void updateAirAttacks(ArrayList<AirSupport> airSupports, ArrayList<Bomb> bombs ) {
@@ -164,6 +178,9 @@ public class Level {
         bombs.removeIf(bomb -> bomb.update(slicers));
 
 
+    }
+    public double getReward() {
+        return  reward;
     }
 
 

@@ -1,7 +1,6 @@
 import bagel.util.Point;
-
-
 import java.util.List;
+
 
 public class Spawn extends Event  {
     List<Point> polyline;
@@ -12,16 +11,11 @@ public class Spawn extends Event  {
     private boolean status = false;
     int frame = 0;
     public Spawn (int numSpawn, int delay, String type, Waves wave, List<Point> polyline) {
-
         super( delay *60 / 1000);
-        System.out.println("delay is" + delay);
-
-        System.out.println("init delay is =" + initDelay);
         this.numSpawn = numSpawn;
         this.wave = wave;
         this.type = type;
         this.polyline = polyline;
-
     }
 
     public Slicer update() {
@@ -31,15 +25,10 @@ public class Spawn extends Event  {
            s = createNew(type, polyline);
            numSpawn--;
        }
-
-
         frame++;
-
         if(numSpawn == 0) {
-
             status = true;
         }
-
         return s;
     }
 

@@ -40,4 +40,12 @@ public class MegaSlicer extends Slicer implements Respwanable {
             array.add(new SuperSlicer(getPolyLines(), getInitVector(), getFinalVector(), getPolylineIndex()));
         }
     }
+
+    public static int getPenalty() {
+       return 2 * SuperSlicer.getPenalty();
+    }
+
+    public int penalize(){
+        return getPenalty();
+    }
 }

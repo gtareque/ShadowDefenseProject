@@ -9,6 +9,7 @@ public class Attack {
     Projectile projectile;
     ActiveTower tower;
     double radius;
+    double reward = 0;
     public Attack(Slicer target, ActiveTower tower){
         this.target = target;
         projectile = tower.shoot(target);
@@ -31,8 +32,10 @@ public class Attack {
                     if(target instanceof Respwanable) {
                         ((Respwanable) target).respawn(targets);
                     }
+                    reward = target.getReward();
                     targets.remove(target);
                     targets.trimToSize();
+
                 }
                 return true;
             }
@@ -40,4 +43,7 @@ public class Attack {
         }
     }
 
+    public double getReward() {
+        return reward;
+    }
 }

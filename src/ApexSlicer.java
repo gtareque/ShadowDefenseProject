@@ -24,4 +24,13 @@ public class ApexSlicer extends Slicer implements Respwanable {
             array.add(new MegaSlicer(getPolyLines(), getInitVector(), getFinalVector(), getPolylineIndex()));
         }
     }
+
+    public static int getPenalty() {
+        return 4 * MegaSlicer.getPenalty();
+    }
+
+    public int penalize(){
+        return getPenalty();
+    }
+
 }

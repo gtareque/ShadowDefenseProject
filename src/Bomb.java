@@ -17,7 +17,7 @@ public class Bomb {
         if(timeFrame == 0) {
             for (Slicer target : targets)  {
                 if(position.distanceTo(target.position()) < 200) {
-                    boolean isDead = target.kill(1);
+                    boolean isDead = target.kill(500);
                     if(isDead) {
                         dead.add(target);
 
@@ -33,6 +33,9 @@ public class Bomb {
 
     public static void removeDead(ArrayList<Slicer> dead, ArrayList<Slicer> targets) {
         for (Slicer slicer: dead) {
+            if( slicer instanceof Respwanable) {
+                ((Respwanable)slicer).respawn(targets);
+            }
             targets.remove(slicer);
 
         }

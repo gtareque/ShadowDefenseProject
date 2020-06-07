@@ -53,8 +53,8 @@ public class ShadowDefend extends AbstractGame {
         polyLines = mapOne.getAllPolylines().get(0);
 
         gameRunning = false;
-        currWave = new Waves();
         buyPanel = new BuyPanel();
+
 
     }
 
@@ -146,6 +146,7 @@ public class ShadowDefend extends AbstractGame {
         if(gameRunning) {
             if (!levels.get(currentLevelIndex).getStatus()) {
                 levels.get(currentLevelIndex).playLevel();
+                buyPanel.addReward(levels.get(currentLevelIndex).getReward());
             } else {
                 /* game over */
                 Window.close();
