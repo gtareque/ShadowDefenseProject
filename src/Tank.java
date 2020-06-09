@@ -1,17 +1,41 @@
 import bagel.DrawOptions;
 import bagel.Image;
-import bagel.util.Point;
 
-public class Tank extends ActiveTower {
+
+public class Tank extends Tower {
     private Image projectileImage = new Image("res/Images/tank_projectile.png");
-    private static Image image = new Image("res/Images/tank.png");
+    private Image image = new Image("res/Images/tank.png");
     double radius = 100;
     private int damage = 1;
-    private static final int price = 300;
-    private final int COOLDOWN_PERIOD = 60;
+    private static final int price = 250;
+    private int coolTime= 60;
     private int cooldownFrames = 0;
+    private static int scaler = 1;
+    public Tank(){
+
+    }
+
+    public Tank(Image projectileImage, Image image, double radius, int damage, int coolTime ) {
+        this.projectileImage = projectileImage;
+        this.image = image;
+        this.radius = radius;
+        this.damage = damage;
+        this.coolTime = coolTime;
+    }
+    private double drawAngle = 0;
 
 
+
+    protected boolean cooldown = false;
+
+    public void startCooldown() {
+        cooldown = true;
+    }
+
+
+    public boolean getCooldown() {
+        return cooldown;
+    }
 
     public int getPrice() {
         return price;
@@ -21,9 +45,6 @@ public class Tank extends ActiveTower {
         return image;
     }
 
-    public static Image getIcon() {
-        return image;
-    }
 
 
 
@@ -37,19 +58,20 @@ public class Tank extends ActiveTower {
         return  price;
     }
 
-    @Override
+
     public Projectile shoot(Slicer target) {
         return new Projectile(target, getPosition(), projectileImage);
     }
 
-    @Override
+
     public double getRadius() {
         return radius;
     }
     public void updateCooldown() {
         if(cooldown) {
             cooldownFrames++;
-            if((cooldownFrames % COOLDOWN_PERIOD) == 0) {
+            if((cooldownFrames  % (coolTime/scaler)) == 0) {
+
                 cooldown = false;
             }
         }
@@ -57,5 +79,19 @@ public class Tank extends ActiveTower {
 
     public int getDamage() {
         return  damage;
+    }
+
+    public void setDrawAngle(double value)
+    {
+
+        drawAngle = value;
+    }
+
+    public double getDrawAngle() {
+        return drawAngle;
+    }
+
+    public static void setScaler(int value) {
+        scaler = value;
     }
 }

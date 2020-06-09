@@ -32,7 +32,7 @@ public class Slicer {
     private Vector2 velocity;       // derived velocity
     private int targetFrames;       // the number of times the velocity must be added to initVector
     private boolean status = false;     // flag for checking if it has completed journey
-    private static int scaler = 1;   // timescale multiplier
+    private static int scalar = 1;   // timescale multiplier
     private List<Point> polyLines;
 
 
@@ -46,7 +46,7 @@ public class Slicer {
         initVector = new Vector2(polyLines.get(0).x, polyLines.get(0).y);
         finalVector = new Vector2(polyLines.get(1).x, polyLines.get(1).y);
         displacementLength = finalVector.sub(initVector).length();
-        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
+        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
 
         /* calculate target frames */
         targetFrames = (int)(displacementLength / velocity.length());
@@ -63,7 +63,7 @@ public class Slicer {
         this.initVector = initVector;
         this.finalVector = finalVector;
         displacementLength = finalVector.sub(initVector).length();
-        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
+        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
 
         /* calculate target frames */
         targetFrames = (int)(displacementLength / velocity.length());
@@ -89,7 +89,7 @@ public class Slicer {
                 initVector = finalVector;
                 finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
                 displacementLength = finalVector.sub(initVector).length();
-                velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
+                velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
                 targetFrames = (int) (displacementLength / velocity.length());
 
             }
@@ -151,10 +151,7 @@ public class Slicer {
      *
      * Updates slicer properties when scaler has been changed */
 //    public void updateSlicer() {
-//        displacementLength = finalVector.sub(initVector).length();
-//        stepsCounter = 0;
-//        velocity = getVelocity(initVector, finalVector, speed).mul(scaler);
-//        targetFrames = (int) (displacementLength / velocity.length());
+
 //    }
 
     /**
@@ -173,8 +170,8 @@ public class Slicer {
      *
      * Set method for scaler
      * @param value The value to be given */
-    public static void setScaler(int value) {
-        scaler = value;
+    public static void setScalar(int value) {
+        scalar *= value;
     }
 
 
@@ -246,5 +243,11 @@ public class Slicer {
 
     public double getReward() {
         return reward;
+    }
+    public void updateVelocity() {
+        displacementLength = finalVector.sub(initVector).length();
+        stepsCounter = 0;
+        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
+        targetFrames = (int) (displacementLength / velocity.length());
     }
 }

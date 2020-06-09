@@ -5,11 +5,11 @@ import bagel.util.Rectangle;
 
 public class BuyPanel {
     private Image panelImage = new Image("res/images/buypanel.png");
-    private Image tankImage = Tank.getIcon();
+    private Image tankImage = new Image("res/images/tank.png");
     private Rectangle tankBounds;
-    private Image superTankImage = SuperTank.getIcon();
+    private Image superTankImage = new Image("res/images/supertank.png");
     private Rectangle superTankBounds;
-    private Image airSupportImage = AirSupport.getIcon();
+    private Image airSupportImage = new Image("res/images/airsupport.png");
     private Rectangle airSupportBounds;
     private Rectangle panelBounds= panelImage.getBoundingBox();
 
@@ -79,7 +79,6 @@ public class BuyPanel {
     public Rectangle getBuyPanelBounds() {
         return panelImage.getBoundingBox();
     }
-
     public void addReward(double reward) {
         cash += reward;
     }

@@ -33,7 +33,6 @@ public class ShadowDefend extends AbstractGame {
     private boolean buyMode = false;
     private Tower currentlyBuying;
     private ArrayList<Level> levels = new ArrayList<Level>();
-
     int currentLevelIndex = 0;
     /* Main */
     public static void main(String args[]) {
@@ -80,7 +79,7 @@ public class ShadowDefend extends AbstractGame {
         try {
             textInput = new FileReader("res/waves.txt");
         } catch (FileNotFoundException e) {
-            System.out.println("flga1");
+
             e.printStackTrace();
         }
         /* buy panel controls */
@@ -134,10 +133,25 @@ public class ShadowDefend extends AbstractGame {
 
         if(input.wasPressed(Keys.L) ) {
 
+            if(scaler < 5) {
+                scaler++;
+                Slicer.setScalar(scaler);
+                levels.get(currentLevelIndex).updateScalar(scaler);
+                Tank.setScaler(scaler);
+                Projectile.setScalar(scaler);
+                Event.setScaler(scaler);
+            }
 
         }
         if(input.wasPressed(Keys.K) ) {
-
+            if(scaler > 1 ) {
+                scaler--;
+                Slicer.setScalar(scaler);
+                levels.get(currentLevelIndex).updateScalar(scaler);
+                Tank.setScaler(scaler);
+                Projectile.setScalar(scaler);
+                Event.setScaler(scaler);
+            }
 
         }
 
@@ -153,6 +167,9 @@ public class ShadowDefend extends AbstractGame {
             }
         }
 
+
+
+        levels.get(currentLevelIndex).renderStatusPanel();
 
     }
 

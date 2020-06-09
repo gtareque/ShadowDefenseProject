@@ -10,7 +10,7 @@ public class Level {
     private ArrayList<Bomb> bombs = new ArrayList<>();
     private TiledMap map;
     private ArrayList<Tower> towers = new ArrayList<Tower>();
-    private ArrayList<ActiveTower> passiveTowers = new ArrayList<>();
+    private ArrayList<Tank> tanks = new ArrayList<>();
     private ArrayList<AirSupport> activeTowers = new ArrayList<>();
     private LinkedList<Waves> waves = new LinkedList<>();
     private Waves wave;
@@ -18,19 +18,21 @@ public class Level {
     private ArrayList<Slicer> slicers = new ArrayList<>();
     private ArrayList<Attack> attacks = new ArrayList<>();
     public int penalty = 0;
+    StatusPanel statusPanel;
     public Level(TiledMap map) {
 
         this.map = map;
+        statusPanel = new StatusPanel();
     }
 
     public void renderLevel() {
-        map.draw(0,0,0,0, 1080.0,1080.0);
+        map.draw(0,0,0,0, 1024.0,1024.0);
     }
 
     public void addTowers(Tower t) {
         towers.add(t);
-        if(t instanceof ActiveTower) {
-            passiveTowers.add((ActiveTower)t);
+        if(t instanceof Tank) {
+            tanks.add((Tank)t);
         } else {
 
             activeTowers.add((AirSupport) t);
@@ -39,7 +41,7 @@ public class Level {
     }
 
     public void drawTowers() {
-        for (ActiveTower tower : passiveTowers) {
+        for (Tank tower : tanks) {
             tower.draw();
         }
     }
@@ -109,7 +111,7 @@ public class Level {
                /* if slicer has reached after update */
                if (slicers.get(i).getStatus()) {
                    /* slicer i is nulled when it has reached the end, else causes null pointer exception */
-                   penalty += slicers.get(i).penalize();
+                   boolean isOver = statusPanel.loseLife(slicers.get(i).penalize());
 
                    slicers.remove(i);
                    slicers.trimToSize();
@@ -117,7 +119,7 @@ public class Level {
                }
 
            }
-           setTarget(passiveTowers, slicers, attacks);
+           setTarget(tanks, slicers, attacks);
            updateAttacks(attacks, slicers);
            updateAirAttacks(activeTowers, bombs);
            updateBombs(bombs, slicers);
@@ -132,14 +134,14 @@ public class Level {
         return map;
     }
 
-    public static void setTarget(ArrayList<ActiveTower> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
-        for (ActiveTower tower : towers) {
+    public static void setTarget(ArrayList<Tank> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
+        for (Tank tower : towers) {
             tower.updateCooldown();
             for (Slicer slicer : slicers) {
                 double distance = tower.getPosition().distanceTo(slicer.position());
                 if (distance < tower.getRadius() & !tower.getCooldown()) {
 
-                    attacks.add(new Attack(slicer, (ActiveTower)tower));
+                    attacks.add(new Attack(slicer, tower));
                     tower.startCooldown();
                 }
             }
@@ -183,5 +185,16 @@ public class Level {
         return  reward;
     }
 
+    public void renderStatusPanel() {
+        statusPanel.renderStatusPanel();
+    }
+    public void updateScalar(int value) {
+        for (Slicer slicer : slicers) {
+            slicer.updateVelocity();
+        }
+        statusPanel.setScaler(value);
+
+
+    }
 
 }

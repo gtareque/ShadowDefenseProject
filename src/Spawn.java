@@ -7,9 +7,10 @@ public class Spawn extends Event  {
     private int numSpawn;
     private String type;
     Waves wave;
-    private int initDelay;
     private boolean status = false;
     int frame = 0;
+
+
     public Spawn (int numSpawn, int delay, String type, Waves wave, List<Point> polyline) {
         super( delay *60 / 1000);
         this.numSpawn = numSpawn;
@@ -21,7 +22,7 @@ public class Spawn extends Event  {
     public Slicer update() {
         Slicer s = null;
 
-       if ((frame % delay) == 0 && numSpawn != 0) {
+       if ((frame % (delay/scaler)) == 0 && numSpawn != 0) {
            s = createNew(type, polyline);
            numSpawn--;
        }

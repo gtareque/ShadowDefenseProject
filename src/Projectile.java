@@ -8,6 +8,7 @@ public class Projectile {
     private Vector2 initVector;
     private double speed = 10.0;
     private Vector2 velocity;
+    private static int scalar = 1;
 
     public Projectile(Slicer target, Point startPosition, Image img) {
         this.target = target;
@@ -17,7 +18,7 @@ public class Projectile {
     }
 
     public void move() {
-        velocity = getVelocity(target.position().asVector(), initVector, speed);
+        velocity = getVelocity(target.position().asVector(), initVector, speed).mul(scalar);
         initVector = initVector.add(velocity);
         img.draw(initVector.x, initVector.y);
 
@@ -33,5 +34,9 @@ public class Projectile {
 
     public Point getCenter() {
         return initVector.asPoint();
+    }
+
+    public static void setScalar(int value) {
+        scalar = value;
     }
 }

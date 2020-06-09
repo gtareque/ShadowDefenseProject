@@ -1,16 +1,17 @@
 import bagel.util.Vector2;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Attack {
 
     Slicer target;
     Projectile projectile;
-    ActiveTower tower;
+    Tank tower;
     double radius;
     double reward = 0;
-    public Attack(Slicer target, ActiveTower tower){
+
+
+    public Attack(Slicer target, Tank tower) {
         this.target = target;
         projectile = tower.shoot(target);
         this.tower = tower;
