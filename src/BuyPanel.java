@@ -26,6 +26,7 @@ public class BuyPanel {
         panelImage.drawFromTopLeft(0,0);
         tankImage.draw(64, panelCentre.y);
         tankBounds = tankImage.getBoundingBoxAt(new Point(64, panelCentre.y));
+
         font.drawString("$250", 52, panelCentre.y + 40, new DrawOptions().setBlendColour(Colour.RED));
         superTankImage.draw(184, panelCentre.y);
         font.drawString("$600", 172, panelCentre.y + 40);

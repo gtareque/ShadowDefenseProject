@@ -7,8 +7,8 @@ public class Delay extends Event {
 
     @Override
     public Slicer update() {
-        delay = (delay/scaler) - 1;
-        if(delay == 0) {
+        delay = delay - (scaler);
+        if(delay <= 0) {
             status = true;
         }
         return null;

@@ -15,12 +15,12 @@ public class Level {
     private LinkedList<Waves> waves = new LinkedList<>();
     private Waves wave;
     private boolean status = false;
-    private ArrayList<Slicer> slicers = new ArrayList<>();
+    private boolean waveRunning = false;
     private ArrayList<Attack> attacks = new ArrayList<>();
-    public int penalty = 0;
+    private boolean pause = true;
     StatusPanel statusPanel;
+    int waveNumber = 0;
     public Level(TiledMap map) {
-
         this.map = map;
         statusPanel = new StatusPanel();
     }
@@ -34,7 +34,6 @@ public class Level {
         if(t instanceof Tank) {
             tanks.add((Tank)t);
         } else {
-
             activeTowers.add((AirSupport) t);
             ((AirSupport) t).setHorizontal((towers.size() - 1) % 2 == 0);
         }
@@ -74,55 +73,30 @@ public class Level {
                 Spawn event = new Spawn(numSpawn, delay, slicerType, waves.get(waveIndex - 1), map.getAllPolylines().get(0));
                 waves.get(waveIndex - 1).addEvent(event);
             }else {
-
                 int delay = Integer.parseInt(line.substring(line.indexOf(',') + 1));
                 Delay event = (new Delay(delay));
                 waves.get(waveIndex - 1).addEvent((event));
             }
 
         }
-        wave = waves.removeFirst();
+
 
     }
 
     public void playLevel() {
 
-           if(wave.isWaveComplete() && !waves.isEmpty()) {
-
-                wave = waves.removeFirst();
+            if(waveRunning) {
+                if(!wave.isWaveComplete()) {
+                    wave.playWaves(statusPanel);
+                    ArrayList<Slicer> slicers = wave.getSlicers();
+                    setTarget(tanks, slicers, attacks);
+                    updateAttacks(attacks, slicers);
+                    updateAirAttacks(activeTowers, bombs);
+                    updateBombs(bombs, slicers);
+                } else {
+                    waveRunning = false;
+                }
             }
-           if(!wave.isWaveComplete()){
-               Slicer s = wave.playWaves();
-
-               if (s != null) {
-
-                   slicers.add(s);
-
-               }
-           }
-           for (int i = 0; i < slicers.size(); i++) {
-
-               /* if slicer hasn't already reached and deleted */
-
-               if (!slicers.get(i).getStatus()) {
-                   slicers.get(i).updateSlicer();
-               }
-
-               /* if slicer has reached after update */
-               if (slicers.get(i).getStatus()) {
-                   /* slicer i is nulled when it has reached the end, else causes null pointer exception */
-                   boolean isOver = statusPanel.loseLife(slicers.get(i).penalize());
-
-                   slicers.remove(i);
-                   slicers.trimToSize();
-
-               }
-
-           }
-           setTarget(tanks, slicers, attacks);
-           updateAttacks(attacks, slicers);
-           updateAirAttacks(activeTowers, bombs);
-           updateBombs(bombs, slicers);
 
     }
 
@@ -130,9 +104,7 @@ public class Level {
         return status;
     }
 
-    public TiledMap getMap() {
-        return map;
-    }
+
 
     public static void setTarget(ArrayList<Tank> towers, ArrayList<Slicer> slicers, ArrayList<Attack> attacks) {
         for (Tank tower : towers) {
@@ -175,8 +147,6 @@ public class Level {
 
     public static void updateBombs(ArrayList<Bomb> bombs, ArrayList<Slicer> slicers) {
 
-
-
         bombs.removeIf(bomb -> bomb.update(slicers));
 
 
@@ -185,16 +155,35 @@ public class Level {
         return  reward;
     }
 
-    public void renderStatusPanel() {
-        statusPanel.renderStatusPanel();
+    public void renderStatusPanel(String status) {
+        statusPanel.renderStatusPanel(status, waveNumber);
+
     }
     public void updateScalar(int value) {
-        for (Slicer slicer : slicers) {
-            slicer.updateVelocity();
-        }
+        wave.updateScaler();
         statusPanel.setScaler(value);
 
-
     }
+
+    public boolean getPause() {
+        return pause;
+    }
+
+    public void setPause(boolean value) {
+        pause = value;
+    }
+
+    public void waveStart() {
+        if(!waves.isEmpty()) {
+            wave = waves.removeFirst();
+            waveRunning = true;
+        }
+    }
+
+    public boolean isInWave() {
+        return waveRunning;
+    }
+
+
 
 }

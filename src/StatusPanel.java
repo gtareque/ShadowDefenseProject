@@ -17,10 +17,13 @@ class StatusPanel
 
 
 
-    public void renderStatusPanel() {
+    public void renderStatusPanel(String status, int waveNum) {
         img.draw(512, 755.5);
         font.drawString("Lives: " + Integer.toString(lives), 900, 760);
-        font.drawString("Scaler: "+Integer.toString(scaler), 450, 760);
+        font.drawString("Time Scale: "+Integer.toString(scaler), 300, 760);
+        font.drawString(status, 450, 760);
+        font.drawString("Wave:" + (Integer.toString(waveNum)), 5, 760);
+
     }
 
     public boolean loseLife(int penalty) {

@@ -46,7 +46,7 @@ public class Slicer {
         initVector = new Vector2(polyLines.get(0).x, polyLines.get(0).y);
         finalVector = new Vector2(polyLines.get(1).x, polyLines.get(1).y);
         displacementLength = finalVector.sub(initVector).length();
-        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
+        velocity = getVelocity(initVector, finalVector, speed);
 
         /* calculate target frames */
         targetFrames = (int)(displacementLength / velocity.length());
@@ -80,17 +80,20 @@ public class Slicer {
      * @param polyLines The polyline generated from the map */
     public void updateSlicer() {
         /* keeps moving till end of polyline */
-        if(polylineIndex < polyLines.size() - 1) {
+        if(polylineIndex < polyLines.size() ) {
+
             /* if a poly line point is reached */
             if (stepsCounter == targetFrames) {
                 polylineIndex += 1;
                 stepsCounter = 0;
                 /* calculate displacement and velocity and target frames */
                 initVector = finalVector;
-                finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
-                displacementLength = finalVector.sub(initVector).length();
-                velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
-                targetFrames = (int) (displacementLength / velocity.length());
+                if(polylineIndex < polyLines.size() - 1) {
+                    finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
+                    displacementLength = finalVector.sub(initVector).length();
+                    velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
+                    targetFrames = (int) (displacementLength / velocity.length());
+                }
 
             }
 
@@ -160,10 +163,7 @@ public class Slicer {
      * @param target  this is the destination polyline point
      * @param velocity current velocity of the slicer*/
     public static boolean outOfBounds(Vector2 target, Vector2 velocity) {
-        if(target.length() < velocity.length()) {
-            return true;
-        }
-        return false;
+        return target.length() < velocity.length();
     }
 
     /**
@@ -171,7 +171,7 @@ public class Slicer {
      * Set method for scaler
      * @param value The value to be given */
     public static void setScalar(int value) {
-        scalar *= value;
+        scalar = value;
     }
 
 
@@ -207,10 +207,7 @@ public class Slicer {
     public boolean kill(int damage) {
         health -= damage;
         System.out.println(health);
-        if(health <= 0) {
-            return true;
-        }
-        return false;
+        return health <= 0;
     }
 
     public Rectangle getBounds() {
@@ -244,6 +241,10 @@ public class Slicer {
     public double getReward() {
         return reward;
     }
+
+
+
+
     public void updateVelocity() {
         displacementLength = finalVector.sub(initVector).length();
         stepsCounter = 0;

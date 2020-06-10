@@ -19,25 +19,50 @@ public class Waves {
     private boolean waveComplete = false;       // wave status
     int eventIndex = 0;
     ArrayList<Event> events = new ArrayList<>();
+    private ArrayList<Slicer> slicers = new ArrayList<>();
 
-    public Slicer playWaves() {
+
+    public void playWaves(StatusPanel panel) {
 
         Slicer s = null;
-
-        if ((eventIndex >= events.size())) {
-
-            waveComplete = true;
-        } else {
+        if ((eventIndex < events.size())) {
             if (events.get(eventIndex).getStatus()) {
                 eventIndex++;
             } else {
-
                 s = events.get(eventIndex).update();
             }
         }
+        if(s != null) {
+            slicers.add(s);
+        }
+        moveSlicers(slicers, panel);
 
-        return s;
+        if(slicers.size() == 0 && eventIndex >= events.size()) {
+            waveComplete = true;
 
+        }
+    }
+
+
+    public static void moveSlicers(ArrayList<Slicer> slicers, StatusPanel panel) {
+        for (int i = 0; i < slicers.size(); i++) {
+
+            /* if slicer hasn't already reached and deleted */
+
+            if (!slicers.get(i).getStatus()) {
+                slicers.get(i).updateSlicer();
+            }
+
+            /* if slicer has reached after update */
+            if (slicers.get(i).getStatus()) {
+                /* slicer i is nulled when it has reached the end, else causes null pointer exception */
+                boolean isOver = panel.loseLife(slicers.get(i).penalize());
+                slicers.remove(i);
+                slicers.trimToSize();
+
+            }
+
+        }
     }
 
 
@@ -62,7 +87,15 @@ public class Waves {
         events.add(e);
     }
 
+    public ArrayList<Slicer> getSlicers() {
+        return slicers;
+    }
 
+    public void updateScaler() {
 
+        for (Slicer slicer : slicers) {
+            slicer.updateVelocity();
+        }
 
+    }
 }

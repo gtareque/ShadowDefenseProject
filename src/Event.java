@@ -12,4 +12,12 @@ public abstract class Event {
     public static void setScaler(int scaler) {
         Event.scaler = scaler;
     }
+    public void updateDelay(boolean increase) {
+        if(increase) {
+            delay = delay * scaler;
+        }
+        else {
+            delay = delay / scaler;
+        }
+    }
 }
