@@ -1,4 +1,6 @@
-1,spawn,5,apexslicer,500
-2,spawn,500,slicer,2000
+1,spawn,10,apexslicer,2000
 2,delay,10000
-2,spawn,1000,slicer,2000
+2,spawn,10,slicer,2000
+3,spawn,5,superslicer,500
+3,spawn,8,megaslicer,500
+3,spawn,8,apexslicer,500

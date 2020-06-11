@@ -63,7 +63,7 @@ public class Slicer {
         this.initVector = initVector;
         this.finalVector = finalVector;
         displacementLength = finalVector.sub(initVector).length();
-        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
+        velocity = getVelocity(initVector, finalVector, speed);
 
         /* calculate target frames */
         targetFrames = (int)(displacementLength / velocity.length());
@@ -91,20 +91,19 @@ public class Slicer {
                 if(polylineIndex < polyLines.size() - 1) {
                     finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
                     displacementLength = finalVector.sub(initVector).length();
-                    velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
+                    velocity = getVelocity(initVector, finalVector, speed);
                     targetFrames = (int) (displacementLength / velocity.length());
                 }
 
             }
-
+            Vector2 v = velocity.mul(scalar);
             /* if velocity too high, adding velocity it takes it beyond final vector */
-            if(!outOfBounds(finalVector.sub(initVector), velocity)) {
-                initVector = initVector.add(velocity);
+            if(!outOfBounds(finalVector.sub(initVector), v)) {
+                initVector = initVector.add(v);
                 stepsCounter += 1;
             } else {
                 initVector = finalVector;
                 stepsCounter = targetFrames;
-
             }
 
             /* get the theta for rotation */

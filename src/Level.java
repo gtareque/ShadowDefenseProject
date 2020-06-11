@@ -83,21 +83,24 @@ public class Level {
 
     }
 
-    public void playLevel() {
+    public boolean playLevel() {
 
             if(waveRunning) {
                 if(!wave.isWaveComplete()) {
-                    wave.playWaves(statusPanel);
+                    if(wave.playWaves(statusPanel)) {
+                        return true;
+                    }
                     ArrayList<Slicer> slicers = wave.getSlicers();
                     setTarget(tanks, slicers, attacks);
                     updateAttacks(attacks, slicers);
                     updateAirAttacks(activeTowers, bombs);
                     updateBombs(bombs, slicers);
                 } else {
+                    reward = waveNumber * 100 + 150;
                     waveRunning = false;
                 }
             }
-
+            return false;
     }
 
     public boolean getStatus() {
@@ -160,30 +163,23 @@ public class Level {
 
     }
     public void updateScalar(int value) {
-        wave.updateScaler();
         statusPanel.setScaler(value);
 
     }
 
-    public boolean getPause() {
-        return pause;
-    }
 
-    public void setPause(boolean value) {
-        pause = value;
-    }
 
     public void waveStart() {
         if(!waves.isEmpty()) {
             wave = waves.removeFirst();
             waveRunning = true;
+            waveNumber++;
         }
     }
 
     public boolean isInWave() {
         return waveRunning;
     }
-
 
 
 }

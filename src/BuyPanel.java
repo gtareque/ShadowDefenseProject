@@ -18,6 +18,7 @@ public class BuyPanel {
     private int airSupportPrice = AirSupport.displayPrice();
     private int cash = 500;
     private Font font = new Font("res/fonts/DejaVuSans-Bold.ttf", 12);
+    private Font fontCash = new Font("res/fonts/DejaVuSans-Bold.ttf", 40);
     Point panelCentre = panelBounds.centre();
 
 
@@ -26,15 +27,13 @@ public class BuyPanel {
         panelImage.drawFromTopLeft(0,0);
         tankImage.draw(64, panelCentre.y);
         tankBounds = tankImage.getBoundingBoxAt(new Point(64, panelCentre.y));
-
         font.drawString("$250", 52, panelCentre.y + 40, new DrawOptions().setBlendColour(Colour.RED));
         superTankImage.draw(184, panelCentre.y);
         font.drawString("$600", 172, panelCentre.y + 40);
         superTankBounds = tankImage.getBoundingBoxAt(new Point(184, panelCentre.y));
         airSupportImage.draw(184 + 120, panelCentre.y);
         airSupportBounds = airSupportImage.getBoundingBoxAt(new Point(184 + 120, panelCentre.y));
-        font.drawString("$500", 172 + 120, panelCentre.y + 40);
-        font.drawString(Integer.toString(cash), 184 + 120 +120, panelCentre.y);
+        fontCash.drawString("$" +Integer.toString(cash), 824 , 65);
     }
 
 

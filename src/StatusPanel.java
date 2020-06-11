@@ -28,7 +28,7 @@ class StatusPanel
 
     public boolean loseLife(int penalty) {
         lives -= penalty;
-        return lives == 0;
+        return lives <=0;
     }
 
     public void setScaler(int value) {

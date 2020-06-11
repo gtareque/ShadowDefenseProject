@@ -28,7 +28,7 @@ public class ShadowDefend extends AbstractGame {
     private int currentLevelIndex = 0;
     private String status = "Awaiting start";
     private String prevStatus = status;
-
+    private boolean gameOver = false;
 
 
     /* Main */
@@ -126,23 +126,28 @@ public class ShadowDefend extends AbstractGame {
             }
         }
 
+        if(!gameOver) {
+            if(input.wasPressed(Keys.S) && !gameRunning) {
+                gameRunning = true;
+                try {
+                    levels.get(currentLevelIndex).createWaves(textInput);
 
-        if(input.wasPressed(Keys.S) && !gameRunning) {
-            gameRunning = true;
-            try {
-                levels.get(currentLevelIndex).createWaves(textInput);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            }
+            if(!levels.get(currentLevelIndex).isInWave()) {
+                status = "awaiting start";
             }
 
-        }
-
         /* scaler controls */
-        if(input.wasPressed(Keys.S) && !levels.get(currentLevelIndex).isInWave() && gameRunning) {
-            status = "wave in progress";
-            levels.get(currentLevelIndex).waveStart();
 
+            if (input.wasPressed(Keys.S) && !levels.get(currentLevelIndex).isInWave() && gameRunning) {
+                status = "wave in progress";
+                levels.get(currentLevelIndex).waveStart();
+
+            }
         }
 
         if(input.wasPressed(Keys.L) ) {
@@ -175,14 +180,19 @@ public class ShadowDefend extends AbstractGame {
 
         if(gameRunning && levels.get(currentLevelIndex).isInWave()) {
             if (!levels.get(currentLevelIndex).getStatus()) {
-                levels.get(currentLevelIndex).playLevel();
+                if(levels.get(currentLevelIndex).playLevel()) {
+                    status = "Game Over";
+                    gameOver = true;
+                    gameRunning = false;
+                };
                 buyPanel.addReward(levels.get(currentLevelIndex).getReward());
             } else if(currentLevelIndex < levels.size() - 1) {
+                levels.get(currentLevelIndex).isInWave();
                 currentLevelIndex++;
                 gameRunning = false;
             } else {
                 /* game over */
-                Window.close();
+                status = "Winner";
             }
         }
 
