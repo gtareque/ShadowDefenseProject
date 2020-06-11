@@ -1,5 +1,4 @@
 import bagel.util.Vector2;
-
 import java.util.ArrayList;
 
 public class Attack {

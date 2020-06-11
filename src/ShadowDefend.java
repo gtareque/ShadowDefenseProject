@@ -17,10 +17,20 @@ import bagel.Input;
 
 
 public class ShadowDefend extends AbstractGame {
+
+    private final int MAX_TIMESCALE = 5;
+    private final int MIN_TIMESCALE = 1;
+
+    /* Status messages */
+    private final String WINNER_MESSAGE = "Winner!";
+    private final String WAITING_MESSAGE = "Awaiting start";
+    private final String WAVE_MESSAGE = "Wave in progress";
+    private final String PLACING = "Placing";
+    private final String GAME_OVER = "Game over!";
     private TiledMap mapOne;
     private TiledMap mapTwo;
     private boolean gameRunning;    // checks if S is pressed
-    private int scaler = 1;     // default scaler value is one
+    private int scaler = MIN_TIMESCALE;     // default scaler value is one
     private BuyPanel buyPanel;
     private boolean buyMode = false;
     private Tower currentlyBuying;
@@ -49,7 +59,6 @@ public class ShadowDefend extends AbstractGame {
         gameRunning = false;
         buyPanel = new BuyPanel();
 
-
     }
 
 
@@ -62,15 +71,68 @@ public class ShadowDefend extends AbstractGame {
 
 
         /* tower placement position validation */
+        if(input != null) {
+            boolean intersectingOther = levels.get(currentLevelIndex).checkTowerPosition(new Point(input.getMouseX(),
+                    input.getMouseY()));
+            boolean hasBlock = mapOne.hasProperty((int) input.getMouseX(), (int) input.getMouseY(), "blocked");
+            boolean insideBuyPanelRectangle = buyPanel.getBuyPanelBounds().intersects(input.getMousePosition());
+            boolean validPosition = (!hasBlock && !insideBuyPanelRectangle && !intersectingOther);
 
-        boolean insideBuyPanelRectangle = buyPanel.getBuyPanelBounds().intersects(input.getMousePosition());
-        boolean validPosition = (!mapOne.hasProperty((int)input.getMouseX(),(int)input.getMouseY(), "blocked")
-                                && !insideBuyPanelRectangle);
-        /* render everything */
-        levels.get(currentLevelIndex).renderLevel();
-        buyPanel.renderBuyPanel();
-        levels.get(currentLevelIndex).drawTowers();
 
+            /* render everything */
+            levels.get(currentLevelIndex).renderLevel();
+            buyPanel.renderBuyPanel();
+            levels.get(currentLevelIndex).drawTowers();
+
+
+
+            /* buy panel controls */
+            if (input.wasPressed(MouseButtons.LEFT) && insideBuyPanelRectangle) {
+                if (buyPanel.getTankBounds().intersects(input.getMousePosition())) {
+                    currentlyBuying = buyPanel.buyTank();
+                }
+
+                if (buyPanel.getSuperTankBounds().intersects(input.getMousePosition())) {
+                    currentlyBuying = buyPanel.buySuperTank();
+                }
+
+                if (buyPanel.getAirSupportBounds().intersects(input.getMousePosition())) {
+                    currentlyBuying = buyPanel.buyAirSupport();
+                }
+
+                if (currentlyBuying != null) {
+
+                    buyMode = true;
+                    prevStatus = status;
+                    status = PLACING;
+                }
+            }
+
+            if (input.wasPressed(MouseButtons.RIGHT) && buyMode) {
+                buyMode = false;
+                currentlyBuying = null;
+                status = prevStatus;
+            }
+
+            if ((validPosition) && buyMode) {
+                currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
+            }
+
+            if ((input.wasPressed(MouseButtons.LEFT) && validPosition) && buyMode) {
+                buyMode = false;
+                status = prevStatus;
+                buyPanel.chargeMoney(currentlyBuying.getPrice());
+                levels.get(currentLevelIndex).addTowers(currentlyBuying);
+                if (currentlyBuying instanceof AirSupport) {
+                    ((AirSupport) currentlyBuying).setFlyingPath(new Point(input.getMouseX(), input.getMouseY()));
+                    currentlyBuying = null;
+                } else {
+                    currentlyBuying.setPosition(new Point(input.getMouseX(), input.getMouseY()));
+                    currentlyBuying = null;
+
+                }
+            }
+        }
 
         FileReader textInput = null;
         try {
@@ -78,52 +140,6 @@ public class ShadowDefend extends AbstractGame {
         } catch (FileNotFoundException e) {
 
             e.printStackTrace();
-        }
-        /* buy panel controls */
-        if(input.wasPressed(MouseButtons.LEFT) && insideBuyPanelRectangle) {
-            if(buyPanel.getTankBounds().intersects(input.getMousePosition())) {
-                currentlyBuying = buyPanel.buyTank();
-            }
-
-            if(buyPanel.getSuperTankBounds().intersects(input.getMousePosition())) {
-                currentlyBuying = buyPanel.buySuperTank();
-            }
-
-            if(buyPanel.getAirSupportBounds().intersects(input.getMousePosition())) {
-                currentlyBuying = buyPanel.buyAirSupport();
-            }
-
-            if(currentlyBuying != null) {
-
-                buyMode = true;
-                prevStatus = status;
-                status = "Placing";
-            }
-        }
-
-        if(input.wasPressed(MouseButtons.RIGHT ) &&  buyMode) {
-            buyMode = false;
-            currentlyBuying = null;
-            status = prevStatus;
-        }
-
-        if((validPosition) && buyMode) {
-            currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
-        }
-
-        if((input.wasPressed(MouseButtons.LEFT) && validPosition) && buyMode) {
-            buyMode = false;
-            status = prevStatus;
-            buyPanel.chargeMoney(currentlyBuying.getPrice());
-            levels.get(currentLevelIndex).addTowers(currentlyBuying);
-            if(currentlyBuying instanceof AirSupport) {
-                ((AirSupport) currentlyBuying).setFlyingPath(new Point(input.getMouseX(), input.getMouseY()));
-                currentlyBuying = null;
-            } else {
-                currentlyBuying.setPosition(new Point(input.getMouseX(), input.getMouseY()));
-                currentlyBuying = null;
-
-            }
         }
 
         if(!gameOver) {
@@ -138,7 +154,7 @@ public class ShadowDefend extends AbstractGame {
 
             }
             if(!levels.get(currentLevelIndex).isInWave()) {
-                status = "awaiting start";
+                status = WAITING_MESSAGE;
             }
 
         /* scaler controls */
@@ -151,26 +167,27 @@ public class ShadowDefend extends AbstractGame {
         }
 
         if(input.wasPressed(Keys.L) ) {
-
-            if(scaler < 5) {
+            if(scaler < MAX_TIMESCALE) {
                 scaler++;
                 Event.setScaler(scaler);
                 Slicer.setScalar(scaler);
-                levels.get(currentLevelIndex).updateScalar(scaler);
+                StatusPanel.setScaler(scaler);
                 Tank.setScaler(scaler);
                 Projectile.setScalar(scaler);
-
+                AirSupport.setScaler(scaler);
             }
 
         }
         if(input.wasPressed(Keys.K) ) {
-            if(scaler > 1 ) {
+            if(scaler > MIN_TIMESCALE ) {
                 scaler--;
                 Event.setScaler(scaler);
                 Slicer.setScalar(scaler);
-                levels.get(currentLevelIndex).updateScalar(scaler);
+                StatusPanel.setScaler(scaler);
+
                 Tank.setScaler(scaler);
                 Projectile.setScalar(scaler);
+                AirSupport.setScaler(scaler);
 
             }
 
@@ -181,7 +198,7 @@ public class ShadowDefend extends AbstractGame {
         if(gameRunning && levels.get(currentLevelIndex).isInWave()) {
             if (!levels.get(currentLevelIndex).getStatus()) {
                 if(levels.get(currentLevelIndex).playLevel()) {
-                    status = "Game Over";
+                    status = GAME_OVER;
                     gameOver = true;
                     gameRunning = false;
                 };
@@ -192,7 +209,7 @@ public class ShadowDefend extends AbstractGame {
                 gameRunning = false;
             } else {
                 /* game over */
-                status = "Winner";
+                status = WINNER_MESSAGE;
             }
         }
 

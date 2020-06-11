@@ -1,4 +1,6 @@
 import bagel.map.TiledMap;
+import bagel.util.Point;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -9,9 +11,8 @@ public class Level {
     private static double reward;
     private ArrayList<Bomb> bombs = new ArrayList<>();
     private TiledMap map;
-    private ArrayList<Tower> towers = new ArrayList<Tower>();
     private ArrayList<Tank> tanks = new ArrayList<>();
-    private ArrayList<AirSupport> activeTowers = new ArrayList<>();
+    private ArrayList<AirSupport> passiveTowers = new ArrayList<>();
     private LinkedList<Waves> waves = new LinkedList<>();
     private Waves wave;
     private boolean status = false;
@@ -30,12 +31,12 @@ public class Level {
     }
 
     public void addTowers(Tower t) {
-        towers.add(t);
+
         if(t instanceof Tank) {
             tanks.add((Tank)t);
         } else {
-            activeTowers.add((AirSupport) t);
-            ((AirSupport) t).setHorizontal((towers.size() - 1) % 2 == 0);
+            passiveTowers.add((AirSupport) t);
+            ((AirSupport) t).setHorizontal((passiveTowers.size() - 1) % 2 == 0);
         }
     }
 
@@ -93,12 +94,16 @@ public class Level {
                     ArrayList<Slicer> slicers = wave.getSlicers();
                     setTarget(tanks, slicers, attacks);
                     updateAttacks(attacks, slicers);
-                    updateAirAttacks(activeTowers, bombs);
+                    updateAirAttacks(passiveTowers, bombs);
                     updateBombs(bombs, slicers);
                 } else {
                     reward = waveNumber * 100 + 150;
                     waveRunning = false;
                 }
+            }
+            if(waves.isEmpty() && wave.isWaveComplete()) {
+                status = true;
+
             }
             return false;
     }
@@ -162,10 +167,7 @@ public class Level {
         statusPanel.renderStatusPanel(status, waveNumber);
 
     }
-    public void updateScalar(int value) {
-        statusPanel.setScaler(value);
 
-    }
 
 
 
@@ -179,6 +181,15 @@ public class Level {
 
     public boolean isInWave() {
         return waveRunning;
+    }
+
+    public boolean checkTowerPosition(Point newTower) {
+        for(Tank t: tanks ) {
+            if(t.getBoundingBox().intersects(newTower)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

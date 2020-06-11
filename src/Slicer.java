@@ -79,6 +79,7 @@ public class Slicer {
      * updates slicer's movements
      * @param polyLines The polyline generated from the map */
     public void updateSlicer() {
+        System.out.println(polylineIndex);
         /* keeps moving till end of polyline */
         if(polylineIndex < polyLines.size() ) {
 
@@ -88,7 +89,7 @@ public class Slicer {
                 stepsCounter = 0;
                 /* calculate displacement and velocity and target frames */
                 initVector = finalVector;
-                if(polylineIndex < polyLines.size() - 1) {
+                if(polylineIndex < polyLines.size() ) {
                     finalVector = new Vector2(polyLines.get(polylineIndex).x, polyLines.get(polylineIndex).y);
                     displacementLength = finalVector.sub(initVector).length();
                     velocity = getVelocity(initVector, finalVector, speed);
@@ -112,6 +113,7 @@ public class Slicer {
         }
         else {
             /* slicer has reached end */
+            System.out.println("ok");
             status = true;
 
         }

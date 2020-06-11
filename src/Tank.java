@@ -1,5 +1,7 @@
 import bagel.DrawOptions;
 import bagel.Image;
+import bagel.util.Rectangle;
+import java.awt.*;
 
 
 public class Tank extends Tower {
@@ -93,5 +95,10 @@ public class Tank extends Tower {
 
     public static void setScaler(int value) {
         scaler = value;
+    }
+
+    public Rectangle getBoundingBox() {
+        return image.getBoundingBoxAt(getPosition());
+
     }
 }
