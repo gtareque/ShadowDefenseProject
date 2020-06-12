@@ -1,7 +1,7 @@
 /*
  *  Shadow Defend
  *  Code Author: G M ASIF TAREQUE - 1004497
- *  Last modification: 7/5/20
+ *  Last modification: 12/6/20
  *
  */
 
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import bagel.Input;
 
 
+
 public class ShadowDefend extends AbstractGame {
 
     private final int MAX_TIMESCALE = 5;
@@ -27,6 +28,8 @@ public class ShadowDefend extends AbstractGame {
     private final String WAVE_MESSAGE = "Wave in progress";
     private final String PLACING = "Placing";
     private final String GAME_OVER = "Game over!";
+
+
     private TiledMap mapOne;
     private TiledMap mapTwo;
     private boolean gameRunning;    // checks if S is pressed
@@ -61,22 +64,33 @@ public class ShadowDefend extends AbstractGame {
 
     }
 
-
     /**
-     *
-     * * Updates the game state approximately 60 times a second, potentially reading from input.
-     * * @param input The input instance which provides access to keyboard/mouse state information.     */
+     * Updates the game state approximately 60 times a second, potentially reading from input.
+     * throws null pointer exception if mouse pointer is outside window
+     * @param input
+     */
     @Override
     protected void update(Input input) {
 
 
         /* tower placement position validation */
-        if(input != null) {
+        if(input.getMousePosition() != null) {
+            /* validate current mouse postion */
+            boolean insideBuyPanelRectangle = buyPanel.getBuyPanelBounds().intersects(input.getMousePosition());
+
             boolean intersectingOther = levels.get(currentLevelIndex).checkTowerPosition(new Point(input.getMouseX(),
                     input.getMouseY()));
-            boolean hasBlock = mapOne.hasProperty((int) input.getMouseX(), (int) input.getMouseY(), "blocked");
-            boolean insideBuyPanelRectangle = buyPanel.getBuyPanelBounds().intersects(input.getMousePosition());
+            boolean hasBlock = false;
+            try {
+               hasBlock = mapOne.hasProperty((int) input.getMouseX(), (int) input.getMouseY(), "blocked");
+            } catch (NullPointerException e) {
+                System.out.println("You are outside the window frame");
+
+            }
+
+
             boolean validPosition = (!hasBlock && !insideBuyPanelRectangle && !intersectingOther);
+
 
 
             /* render everything */
@@ -108,21 +122,26 @@ public class ShadowDefend extends AbstractGame {
                 }
             }
 
+            /* cancel buy */
             if (input.wasPressed(MouseButtons.RIGHT) && buyMode) {
                 buyMode = false;
                 currentlyBuying = null;
-                status = prevStatus;
+                status = prevStatus;    // setting status message
             }
 
+            /* render image with mouse pointer */
             if ((validPosition) && buyMode) {
                 currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
             }
 
+            /* purchase happening */
             if ((input.wasPressed(MouseButtons.LEFT) && validPosition) && buyMode) {
                 buyMode = false;
                 status = prevStatus;
                 buyPanel.chargeMoney(currentlyBuying.getPrice());
                 levels.get(currentLevelIndex).addTowers(currentlyBuying);
+
+                /* check tower type */
                 if (currentlyBuying instanceof AirSupport) {
                     ((AirSupport) currentlyBuying).setFlyingPath(new Point(input.getMouseX(), input.getMouseY()));
                     currentlyBuying = null;
@@ -134,20 +153,21 @@ public class ShadowDefend extends AbstractGame {
             }
         }
 
+        /* read waves.txt */
         FileReader textInput = null;
         try {
             textInput = new FileReader("res/waves.txt");
         } catch (FileNotFoundException e) {
-
             e.printStackTrace();
         }
 
+
         if(!gameOver) {
+            /* initial S press */
             if(input.wasPressed(Keys.S) && !gameRunning) {
                 gameRunning = true;
                 try {
                     levels.get(currentLevelIndex).createWaves(textInput);
-
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -157,7 +177,7 @@ public class ShadowDefend extends AbstractGame {
                 status = WAITING_MESSAGE;
             }
 
-        /* scaler controls */
+
 
             if (input.wasPressed(Keys.S) && !levels.get(currentLevelIndex).isInWave() && gameRunning) {
                 status = "wave in progress";
@@ -166,6 +186,7 @@ public class ShadowDefend extends AbstractGame {
             }
         }
 
+        /* Time scale controls */
         if(input.wasPressed(Keys.L) ) {
             if(scaler < MAX_TIMESCALE) {
                 scaler++;
@@ -194,10 +215,11 @@ public class ShadowDefend extends AbstractGame {
         }
 
 
-
+        /* update level, nothing should happen S is pressed */
         if(gameRunning && levels.get(currentLevelIndex).isInWave()) {
             if (!levels.get(currentLevelIndex).getStatus()) {
                 if(levels.get(currentLevelIndex).playLevel()) {
+                    /* all lives lost */
                     status = GAME_OVER;
                     gameOver = true;
                     gameRunning = false;
@@ -208,13 +230,13 @@ public class ShadowDefend extends AbstractGame {
                 currentLevelIndex++;
                 gameRunning = false;
             } else {
-                /* game over */
+                /* game won */
                 status = WINNER_MESSAGE;
             }
         }
 
 
-
+        /* Render status panel */
         levels.get(currentLevelIndex).renderStatusPanel(status);
 
     }

@@ -1,6 +1,9 @@
 import bagel.Image;
 import bagel.util.Point;
 
+/**
+ * Towers are all the defenses of the game
+ */
 public abstract class Tower {
     private Point position;
     public void setPosition(Point position) {

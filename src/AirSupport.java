@@ -19,7 +19,7 @@ public class AirSupport extends Tower {
     private Vector2 velocity;
     private Vector2 position;
     private boolean horizontal = false;
-    private int framesToDetonate = 60;  // time for bommb after drop
+    private int framesToDetonate;  // time for drop
     private int currentFrames = 0;
     private static int scalar = 1;  // time scale
     private static Image image = new Image("res/images/airsupport.png");

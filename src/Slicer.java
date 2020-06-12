@@ -56,7 +56,13 @@ public class Slicer {
 
     }
 
-
+    /**
+     * This contructor is called when respawning
+     * @param polyLines the map polyline
+     * @param initVector current position
+     * @param finalVector  target to rach
+     * @param polylineIndex current polyline index
+     */
 
     public Slicer(List<Point> polyLines, Vector2 initVector, Vector2 finalVector, int polylineIndex) {
         this.polyLines = polyLines;
@@ -125,7 +131,8 @@ public class Slicer {
      *
      * Calculates the velocity of the slicer
      * @param v1 initial vector
-     * @param v2 final vector */
+     * @param v2 final vector
+     * @param speed the speed of the slicer*/
 
 
     public static Vector2 getVelocity(Vector2 v1, Vector2 v2, double speed) {
@@ -205,6 +212,12 @@ public class Slicer {
         slicerImage = image;
     }
 
+    /**
+     * KILL the slicer if damage high enough
+     * @param damage is the health to reduce
+     * @return true if dead
+     */
+
     public boolean kill(int damage) {
         health -= damage;
         System.out.println(health);
@@ -246,10 +259,5 @@ public class Slicer {
 
 
 
-    public void updateVelocity() {
-        displacementLength = finalVector.sub(initVector).length();
-        stepsCounter = 0;
-        velocity = getVelocity(initVector, finalVector, speed).mul(scalar);
-        targetFrames = (int) (displacementLength / velocity.length());
-    }
+
 }

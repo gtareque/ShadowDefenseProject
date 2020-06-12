@@ -4,6 +4,10 @@ import bagel.Image;
 import bagel.util.Colour;
 import bagel.util.Point;
 
+/**
+ * The bottom panel of the game
+ */
+
 class StatusPanel
 {   private final Point IMG_POS = new Point(512 , 755.5);
     private final Point LIVES_POS = new Point(900, 760);
@@ -17,13 +21,18 @@ class StatusPanel
     public int lives;
     private Font font = new Font("res/fonts/DejaVuSans-Bold.ttf", 15);
 
+
     public StatusPanel()
     {
         lives = 25;
     }
 
 
-
+    /**
+     * Renders the status panel
+     * @param status the status message
+     * @param waveNum the wave number currenly running
+     */
     public void renderStatusPanel(String status, int waveNum) {
         img.draw(IMG_POS.x, IMG_POS.y);
         font.drawString("Lives: " + lives, LIVES_POS.x, LIVES_POS.y);
@@ -38,6 +47,11 @@ class StatusPanel
 
     }
 
+    /**
+     * slicer has reached end and life must be lost
+     * @param penalty
+     * @return
+     */
     public boolean loseLife(int penalty) {
         lives -= penalty;
         return lives <=0;

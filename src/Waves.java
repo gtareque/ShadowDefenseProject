@@ -11,10 +11,13 @@
 
 import java.util.ArrayList;
 
+/**
+ * Waves are part of the levels
+ * Waves contain events and slicers
+ */
+
 public class Waves {
 
-
-         // Array to store all the created slicers
 
     private boolean waveComplete = false;       // wave status
     int eventIndex = 0;
@@ -22,23 +25,35 @@ public class Waves {
     private ArrayList<Slicer> slicers = new ArrayList<>();
 
 
+    /**
+     * update wave each frame
+     * @param panel the status panel at the bottom
+     * @return True if game over
+     */
     public boolean playWaves(StatusPanel panel) {
 
-        Slicer s = null;
+        Slicer slicer = null;
+
         if ((eventIndex < events.size())) {
             if (events.get(eventIndex).getStatus()) {
+                /* move to next event */
                 eventIndex++;
             } else {
-                s = events.get(eventIndex).update();
+                /* slicer can be null */
+                slicer = events.get(eventIndex).update();
             }
         }
-        if(s != null) {
-            slicers.add(s);
+        if(slicer != null) {
+            slicers.add(slicer);
         }
+
+        /* update all slicer */
         if(moveSlicers(slicers, panel)) {
+            /* GAME OVER */
             return true;
         }
 
+        /* True if wave complete */
         if(slicers.size() == 0 && eventIndex >= events.size()) {
             waveComplete = true;
 
@@ -47,6 +62,12 @@ public class Waves {
     }
 
 
+    /**
+     * Update all slicers each frame
+     * @param slicers the spawned slicers
+     * @param panel the status panel at the bottom
+     * @return true if game over and life is below zero
+     */
     public static boolean moveSlicers(ArrayList<Slicer> slicers, StatusPanel panel) {
         boolean isOver = false;
         for (int i = 0; i < slicers.size(); i++) {
@@ -73,8 +94,9 @@ public class Waves {
 
 
     /**
-     *
-     * get method for waveComplete */
+      *
+      * get method for waveComplete
+     * */
 
     public boolean isWaveComplete() {
         return waveComplete;
@@ -82,10 +104,6 @@ public class Waves {
 
 
 
-    /**
-     *
-     * updates properties of slicers when scale changes
-     * @param scaler The timescale multiplier from main */
 
 
     public void addEvent(Event e) {

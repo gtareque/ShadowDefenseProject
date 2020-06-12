@@ -10,6 +10,14 @@ public class Spawn extends Event  {
     private boolean status = false;
     int frame = 0;
 
+    /**
+     * Constructor
+     * @param numSpawn number of slicer to be spawned in this event
+     * @param delay spawn delay in frames
+     * @param type the type of slicer to be spawned
+     * @param wave the wave this event is in
+     * @param polyline
+     */
 
     public Spawn (int numSpawn, int delay, String type, Waves wave, List<Point> polyline) {
         super( delay *60 / 1000);
@@ -19,6 +27,10 @@ public class Spawn extends Event  {
         this.polyline = polyline;
     }
 
+    /**
+     * Updates event properties each frame
+     * @return spawned slicer or null
+     */
     public Slicer update() {
         Slicer s = null;
 
@@ -32,6 +44,13 @@ public class Spawn extends Event  {
         }
         return s;
     }
+
+    /**
+     * Spawn slicers
+     * @param type the type of slicer
+     * @param polylines the polyline fo the map
+     * @return spawned SLicer
+     */
 
     public static Slicer createNew(String type, List<Point> polylines) {
 

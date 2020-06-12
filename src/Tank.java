@@ -1,7 +1,11 @@
 import bagel.DrawOptions;
 import bagel.Image;
 import bagel.util.Rectangle;
-import java.awt.*;
+
+/**
+ * Tank is one of the towers of the game
+ * All functions inherited by Super Tank
+ */
 
 
 public class Tank extends Tower {
@@ -13,10 +17,22 @@ public class Tank extends Tower {
     private int coolTime= 60;
     private int cooldownFrames = 0;
     private static int scaler = 1;
+
+    /**
+     * Constructor called when tank is purchased
+     */
     public Tank(){
 
     }
 
+    /**
+     * Constructor called by Super tank
+     * @param projectileImage Super tank projectile image
+     * @param image SuperTank image
+     * @param radius Supertank radius
+     * @param damage Supertank damge
+     * @param coolTime Supertank cooltime
+     */
     public Tank(Image projectileImage, Image image, double radius, int damage, int coolTime ) {
         this.projectileImage = projectileImage;
         this.image = image;
@@ -48,19 +64,23 @@ public class Tank extends Tower {
     }
 
 
-
-
+    /**
+     * render tank
+     */
     public void draw() {
 
         image.draw(getPosition().x, getPosition().y, new DrawOptions().setRotation(getDrawAngle()));
 
     }
 
+
+    /* display price on the panel */
     public static int displayPrice() {
         return  price;
     }
 
 
+    /* shoot a projectile */
     public Projectile shoot(Slicer target) {
         return new Projectile(target, getPosition(), projectileImage);
     }
@@ -69,6 +89,8 @@ public class Tank extends Tower {
     public double getRadius() {
         return radius;
     }
+
+    /* updates the cooldown each frame */
     public void updateCooldown() {
         if(cooldown) {
             cooldownFrames++;
@@ -83,9 +105,10 @@ public class Tank extends Tower {
         return  damage;
     }
 
+
+    /* change the draw angle towards target */
     public void setDrawAngle(double value)
     {
-
         drawAngle = value;
     }
 
