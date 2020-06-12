@@ -132,6 +132,7 @@ public class ShadowDefend extends AbstractGame {
             /* render image with mouse pointer */
             if ((validPosition) && buyMode) {
                 currentlyBuying.getImage().draw(input.getMouseX(), input.getMouseY());
+
             }
 
             /* purchase happening */
@@ -151,6 +152,8 @@ public class ShadowDefend extends AbstractGame {
 
                 }
             }
+
+
         }
 
         /* read waves.txt */
@@ -174,7 +177,9 @@ public class ShadowDefend extends AbstractGame {
 
             }
             if(!levels.get(currentLevelIndex).isInWave()) {
-                status = WAITING_MESSAGE;
+                if(!buyMode) {
+                    status = WAITING_MESSAGE;
+                }
             }
 
 
