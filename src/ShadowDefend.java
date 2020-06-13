@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import bagel.Input;
 
 
+/**
+ * The ShadowDefend class consists of the main method and the update method which is called
+ * 60 times per second
+ */
+
+
 
 public class ShadowDefend extends AbstractGame {
 
@@ -34,13 +40,13 @@ public class ShadowDefend extends AbstractGame {
     private TiledMap mapTwo;
     private boolean gameRunning;    // checks if S is pressed
     private int scaler = MIN_TIMESCALE;     // default scaler value is one
-    private BuyPanel buyPanel;
+    private BuyPanel buyPanel;      // the top panel
     private boolean buyMode = false;
     private Tower currentlyBuying;
     private ArrayList<Level> levels = new ArrayList<Level>();
     private int currentLevelIndex = 0;
-    private String status = "Awaiting start";
-    private String prevStatus = status;
+    private String status = WAITING_MESSAGE;
+    private String prevStatus = status;     // stores the status before Placing
     private boolean gameOver = false;
 
 
@@ -176,16 +182,15 @@ public class ShadowDefend extends AbstractGame {
                 }
 
             }
+            /* No wave is being played but game has started */
             if(!levels.get(currentLevelIndex).isInWave()) {
                 if(!buyMode) {
                     status = WAITING_MESSAGE;
                 }
             }
-
-
-
+            /* wave running */
             if (input.wasPressed(Keys.S) && !levels.get(currentLevelIndex).isInWave() && gameRunning) {
-                status = "wave in progress";
+                status = WAVE_MESSAGE;
                 levels.get(currentLevelIndex).waveStart();
 
             }
@@ -204,6 +209,7 @@ public class ShadowDefend extends AbstractGame {
             }
 
         }
+        /* decrease time scale */
         if(input.wasPressed(Keys.K) ) {
             if(scaler > MIN_TIMESCALE ) {
                 scaler--;
@@ -231,7 +237,6 @@ public class ShadowDefend extends AbstractGame {
                 };
                 buyPanel.addReward(levels.get(currentLevelIndex).getReward());
             } else if(currentLevelIndex < levels.size() - 1) {
-                levels.get(currentLevelIndex).isInWave();
                 currentLevelIndex++;
                 gameRunning = false;
             } else {

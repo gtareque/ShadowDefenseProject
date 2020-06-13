@@ -3,6 +3,9 @@ import bagel.util.Colour;
 import bagel.util.Point;
 import bagel.util.Rectangle;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * BuyPanel is the top panel of the game
  * Has cash record and the items to buy
@@ -57,6 +60,7 @@ public class BuyPanel {
     public void renderBuyPanel() {
 
         panelImage.drawFromTopLeft(0,0);
+        String temp = NumberFormat.getInstance(Locale.US).format(cash);
         tankImage.draw(TANK_IMAGE_X, IMAGE_Y);
         tankBounds = tankImage.getBoundingBoxAt(new Point(TANK_IMAGE_X, IMAGE_Y));
 
@@ -67,7 +71,7 @@ public class BuyPanel {
         airSupportImage.draw(AIRSUPPORT_IMAGE_X, IMAGE_Y);
         airSupportBounds = airSupportImage.getBoundingBoxAt(new Point(AIRSUPPORT_IMAGE_X, IMAGE_Y));
         infoFont.drawString(MESSAGE, MESSAGE_POSITION.x, MESSAGE_POSITION.y);
-        fontCash.drawString("$" + Integer.toString(cash), CASH_POSITION.x, CASH_POSITION.y);
+        fontCash.drawString("$" + temp, CASH_POSITION.x, CASH_POSITION.y);
         if(cash < Tank.displayPrice()) {
             font.drawString("$" +Integer.toString(Tank.displayPrice()), TANK_FONT_POSITION.x,
                     TANK_FONT_POSITION.y, new DrawOptions().setBlendColour(Colour.RED));
